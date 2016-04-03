@@ -1,0 +1,32 @@
+***[screen ff-sans bc-white]
+
+****[manual][<>]
+=== COLORS ===
+=== BACKGROUND ===
+:: background colors ::[c-white cp-2][100%][<>]
+:............:
+: bc-black   :[bc-black][12.5%]
+: bc-navy    :[bc-navy][12.5%]
+: bc-blue    :[bc-blue][12.5%]
+: bc-aqua    :[bc-aqua c-black][12.5%]
+: bc-teal    :[bc-teal][12.5%]
+: bc-olive   :[bc-olive][12.5%]
+: bc-green   :[bc-green][12.5%]
+: bc-lime    :[bc-lime][12.5%]
+:...........:
+: bc-silver  :[bc-silver c-black]
+: bc-gray    :[bc-gray c-black]
+: bc-purple  :[bc-purple]
+: bc-fuchsia :[bc-fuchsia]
+: bc-maroon  :[bc-maroon]
+: bc-red     :[bc-red]
+: bc-orange  :[bc-orange]
+: bc-yellow  :[bc-yellow c-black]
+:............:
+: bc-white   :{8}[bc-white c-black bc--silver bw-1]
+:............:
+****
+
+***
+
+
