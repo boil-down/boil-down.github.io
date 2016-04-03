@@ -6,8 +6,8 @@
 .a6 {  max-width: 10.5cm; padding: 1.5cm; margin: 0 auto; box-sizing: border-box; }
 
 .manual > div { max-width: 40em; margin: 0 auto; padding: 1cm 0; }
-.screen { height: 100%; vertical-align: center; }
-.screen > div { width: 800px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.screen { height: 100%; }
+.screen > div { width: 800px; position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
 /* fonts */
 .ff-sans { font-family: Ubuntu, Verdana, Arial, Helvetica, sans-serif !important; }

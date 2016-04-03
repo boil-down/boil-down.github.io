@@ -9,17 +9,28 @@
 .column { width: 46%; margin: 2%; float: left; position: relative; }
 html { height: 100%; }
 #bdBody { background-color: #ccc; margin: 0; padding: 0; height: calc(100% - 40px); }
-#bdNavbar { background-color: #ddd; border-bottom: 1px solid #aaa; padding: 5px; height: 30px; text-align: center; position: fixed; width: 100%; top: 0; }
-#bdDocument { margin-top: 40px; height: 100%; }
+#bdNavbar { background-color: #ddd; border-bottom: 1px solid #aaa; padding: 5px; height: 30px; text-align: center; position: fixed; width: 100%; top: 0; z-index: 1;  }
 #bdURL { padding: 7px 5px 3px 25px; font-size: 15px; font-family: monospace; width: 80%; color: #333; border: 1px solid #bbb; border-top-color: #999; border-radius: 3px; background-image: url(bd.png); background-position: 5px center; background-repeat: no-repeat; line-height: 16px; }
 #bdURL:focus { outline: none; }
+#bdBtnShowMarkup { float: left; padding: 5px; background-color: #eee; border: 1px outset #ccc; border-radius: 3px; cursor: pointer; font-family: monospace; font-size: 12px; }
+
+#bdDocument { height: 100%; display: block; margin: 0 auto; }
+#bdMarkup { margin: 0; padding: 5px 1em; display: none; width: 50%; float: left; box-sizing: border-box; position: absolute; }
+.bd-markup #bdMarkup { display: block; }
+.bd-markup #bdDocument { margin-left: 50%; }
+.bd-markup #bdBtnShowMarkup { border-style: inset; }
 	</style>
   </head>
   <body id="bdBody">
 	<div id="bdNavbar">
+		<a id="bdBtnShowMarkup" onclick="document.getElementById('bdBody').classList.toggle('bd-markup')">{markup}</a>
 		<input type="text" id="bdURL" onkeypress="if (event.keyCode === 13) { window.document.location='?url='+encodeURIComponent(this.value); return true; }" />
 	</div>
-	<div id="bdDocument"></div>
+	<div style="margin-top: 40px; height: 100%; ">
+		<pre id="bdMarkup"></pre>
+		<div id="bdDocument"></div>
+	</div>
+
 	<script src="/boildown.js"></script>
 	<script src="/reader.js"></script>
     <script>
@@ -32,16 +43,16 @@ html { height: 100%; }
 				? "https://raw.githubusercontent.com/boil-down/boildown.js/master/user-manual.bd" 
 				: "user-manual.bd";
 		}
-		var e = document.getElementById('bdDocument');
 		bdReader.open(url, function(markup) {
 			var start = new Date().getTime();
 			var html = bd.toHTML(markup);
 			var parsed = new Date().getTime();
-			e.innerHTML=html;
+			document.getElementById('bdDocument').innerHTML=html;
 			var end = new Date().getTime();
 			if (console && console.log) {
 				console.log("took "+(parsed-start)+"ms to parse, "+(end-parsed)+"ms to render");
 			}
+			document.getElementById('bdMarkup').innerHTML=markup;
 		}, function(status) {
 			if (url !== "404.bd") {
 				window.location="?url=404.bd&target="+encodeURIComponent(url);
