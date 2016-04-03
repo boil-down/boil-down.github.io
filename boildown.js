@@ -1,5 +1,5 @@
 
-var Boildown = (function() {
+var bd = (function() {
 	'use strict';
 
 	const BLOCKS    = [
@@ -18,7 +18,7 @@ var Boildown = (function() {
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
 		[ Heading,     /^={3,}(.+?)(?:={3,})(?:\{(\w+)\})?((?:\[[^\]]+\])*)?$/ ],
 		[ Table,       /^([:\|]):?(.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?$/ ],
-		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+]?){1,20}))\s+([-+ ,.:\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
+		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+?=&]?){1,20}))\s+([-+ ,.:\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
 		[ Paragraph,   /^(.|$)/ ]
 	];
 
@@ -34,13 +34,12 @@ var Boildown = (function() {
 		["<sup>$2</sup>$3",     /([\^]{1,})(.*?[^\^])\1($|[^\^])/g, 5 ],
 		["<del>$1</del>",       /--(..*?)--/g ],
 		["<ins>$1</ins>",       /\+\+(..*?)\+\+/g ],
-		["<u class='$2'>$1</u>", /!(..*?)!\{([a-z]+)\}/g ],
+		["<u class='$2'>$1</u>", /!(..*?)!\{([-a-z]+)\}/g ],
 		["<tt>$1</tt>",         /``(..*?)``/g ],
 		["<span style='font-variant:small-caps;'>$1</span>", /==(..*?)==/g ],
 		["<span style='text-decoration: underline;'>$1</span>", /__(..*?)__/g ],
 		["<kbd>$1</kbd>",       /@(..*?)@/g ],
 		["<code>$1</code>",     /`(..*?)`/g ],
-		["<samp>$1</samp>",     /\$(..*?)\$/g ],
 		["<abbr>$1</abbr>",     /\.([A-Z]{2,6})\./g ],
 		["<cite>$1</cite>",     /"(..*?)"/g ],
 		["<strong>$1</strong>", /\*(..*?)\*/g ],
@@ -49,18 +48,20 @@ var Boildown = (function() {
 		[" <s>$1</s> ",         / -([^- \t].*?[^- \t])- /g ],
 		[" <def>$1</def> ",     / :([^: \t].*?[^: \t]): /g ],		
 		["<span style='color: $2$3;'>$1</span>", /::([^:].*?)::\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
-		["<a href=\"$1\">$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+]?){1,20}) (.+?)\]\]/g ],
-		["$1<a href=\"$2$3\">$3</a>", /(^|[^=">])(https?:\/\/|www\.)((?:[-\w]{0,15}[.:/#+]?){1,20})/g ],
+		["<a href=\"$1\">$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+?=&]?){1,20}) (.+?)\]\]/g ],
+		["$1<a href=\"$2$3\">$3</a>", /(^|[^=">])(https?:\/\/|www\.)((?:[-\w]{0,15}[.:/#+?=&]?){1,20})/g ],
 		["<a href=\"#sec-$1\">$1</a>", /\[\[(\d+(?:\.\d+)*)\]\]/g ],
 		["<sup><a href='#fnote$1'>$1</a></sup>", /\^\[(\d+)\]/g ],
+		//TODO [[...]]* (a link that is meant as an include; support line slicing ala #L10-L14)
+		//TODO an addition to inline that is done last and matches the > of </tag> to alter it and add a user/comment to it (wrapper?)
 	];
 
 	const STYLES = [
 		// dynamic values
-		[ /^\d{1,3}%$/,  "width"],
+		[ /^[\d\.]{1,4}%$/,  "width"],
 		[ /^\d{1,2}pt$/, "font-size"],
 		[ /^#\w{6}$/,    "background-color"],
-		[ /^(?:[- \w]*)+$/ ], // length 1 => classes, else => style
+		[ /^[- \w]+$/ ], // length 1 => classes, else => style
 		// fixed values
 		[ /^`$/,  "font-family", "monospace", "ff-mono"],
 		[ /^'$/,  "font-family", "sans-serif", "ff-sans"],
@@ -98,8 +99,14 @@ var Boildown = (function() {
 	}
 
 	return {
-		toHTML: processMarkup
+		toHTML: processMarkup,
+		URLparam: URLparam
 	};
+
+	function URLparam(name) {
+		var url = new RegExp("[&?]"+name+"=([^&]+)").exec(window.location.search);
+		return url && url[1] ? decodeURIComponent(url[1]) : undefined;
+	}
 
 	function processMarkup(markup) {
 		var doc = new Doc(markup);
@@ -255,7 +262,7 @@ var Boildown = (function() {
 		var content = doc.html.substring(l0);
 		doc.html=doc.html.substring(0, l0);
 		doc.add(example);
-		doc.add("</code></pre></td>\n<td>"); 
+		doc.add("</code></pre></td>\n<td class='output'>"); 
 		doc.add(content);
 		doc.add("</td></tr></table>");
 		return i;
@@ -390,9 +397,9 @@ var Boildown = (function() {
 		var retag = tagged && TAGS.indexOf(page[2]) >= 0;
 		var tag = retag? page[2] : "div";
 		var classes = "bd-mp "+(tagged && !retag ? page[2] : "");
-		doc.add("<"+tag+" "+doc.styles(line, classes)+">\n\t");
+		doc.add("<"+tag+" "+doc.styles(line, classes)+"><div>\n");
 		doc.process(start+1, i, level+1); 
-		doc.add("</"+tag+">\n");
+		doc.add("</div></"+tag+">\n");
 		return i+1;
 	}
 
@@ -444,7 +451,12 @@ var Boildown = (function() {
 		for (var i = 0; i < plains.length; i++) {
 			html=html.replace("!!"+i+"!!", plains[i]);
 		}
+		html=html.replace(/\$(\w+)\$/, substURLparam);
 		return html;
+	}
+
+	function substURLparam(markup, name) {
+		return processLine(URLparam(name));
 	}
 
 	function substitute(line) {

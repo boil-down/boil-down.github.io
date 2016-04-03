@@ -2,14 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+	<link rel="shortcut icon" href="/bd.png" type="image/png">
     <title>boildown reader</title>
-	<link rel="stylesheet" href="reader.css">	
+	<link rel="stylesheet" href="reader.css">
+	<style>
+.column { width: 46%; margin: 2%; float: left; position: relative; }
+html { height: 100%; }
+#bdBody { background-color: #ccc; margin: 0; padding: 0; height: calc(100% - 40px); }
+#bdNavbar { background-color: #ddd; border-bottom: 1px solid #aaa; padding: 5px; height: 30px; text-align: center; position: fixed; width: 100%; top: 0; }
+#bdDocument { margin-top: 40px; height: 100%; }
+#bdURL { padding: 7px 5px 3px 25px; font-size: 15px; font-family: monospace; width: 80%; color: #333; border: 1px solid #bbb; border-top-color: #999; border-radius: 3px; background-image: url(bd.png); background-position: 5px center; background-repeat: no-repeat; line-height: 16px; }
+#bdURL:focus { outline: none; }
+	</style>
   </head>
   <body id="bdBody">
-	<input type="text" id="bdURL" onkeypress="if (event.keyCode === 13) { show(); }" />
-	<article id="bdDocument">
-
-	</article>
+	<div id="bdNavbar">
+		<input type="text" id="bdURL" onkeypress="if (event.keyCode === 13) { window.document.location='?url='+encodeURIComponent(this.value); return true; }" />
+	</div>
+	<div id="bdDocument"></div>
 	<script src="/boildown.js"></script>
 	<script src="/reader.js"></script>
     <script>
@@ -20,27 +30,26 @@
 		if (!url) {
 			url = window.location.hostname.indexOf(".github.io") > 0 
 				? "https://raw.githubusercontent.com/boil-down/boildown.js/master/user-manual.bd" 
-				: "/user-manual.bd";
+				: "user-manual.bd";
 		}
 		var e = document.getElementById('bdDocument');
 		bdReader.open(url, function(markup) {
 			var start = new Date().getTime();
-			var html = Boildown.toHTML(markup);
+			var html = bd.toHTML(markup);
 			var parsed = new Date().getTime();
 			e.innerHTML=html;
 			var end = new Date().getTime();
 			if (console && console.log) {
 				console.log("took "+(parsed-start)+"ms to parse, "+(end-parsed)+"ms to render");
 			}
-			document.getElementById('bdURL').value=url;
 		}, function(status) {
-			e.innerHTML="Failed to laod document <code>"+url+"</code>: "+status;
+			if (url !== "404.bd") {
+				window.location="?url=404.bd&target="+encodeURIComponent(url);
+			}
 		}
 		);
 	}
-	var url = /[&?]url=([^&]+)/.exec(window.location.search);
-	if (url && url[1]) { url=decodeURIComponent(url[1]); }
-	show(url);
+	show(document.getElementById('bdURL').value=bd.URLparam("url"));
 	</script>
   </body>
 </html>
