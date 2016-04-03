@@ -5,9 +5,11 @@
 .a5 { max-width: 14.8cm; padding: 2cm; margin: 0 auto; box-sizing: border-box; }
 .a6 {  max-width: 10.5cm; padding: 1.5cm; margin: 0 auto; box-sizing: border-box; }
 
+.slideshow { min-height: 100%; }
 .manual > div { max-width: 40em; margin: 0 auto; padding: 1cm 0; }
 .screen { height: 100%; }
 .screen > div { width: 800px; position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
 
 /* fonts */
 .ff-sans { font-family: Ubuntu, Verdana, Arial, Helvetica, sans-serif !important; }
@@ -69,11 +71,11 @@
 .bc--white  { border-color: #FFFFFF; }
 
 /* borders */
-.bw-1 { border-width: 1px; border-style: solid; }
-.bw-2 { border-width: 2px; border-style: solid; }
-.bw-3 { border-width: 3px; border-style: solid; }
-.bw-4 { border-width: 4px; border-style: solid; }
-.bw-5 { border-width: 5px; border-style: solid; }
+.bw-1, tr.bw-1 td { border-width: 1px; border-style: solid; }
+.bw-2, tr.bw-2 td { border-width: 2px; border-style: solid; }
+.bw-3, tr.bw-3 td { border-width: 3px; border-style: solid; }
+.bw-4, tr.bw-4 td { border-width: 4px; border-style: solid; }
+.bw-5, tr.bw-5 td { border-width: 5px; border-style: solid; }
 
 /* semantic colors */
 *[class^="c-"], *[class^="bc-"] { text-decoration: none; }
@@ -103,8 +105,13 @@ p:first-child + * { margin-top: 0.6em; }
 
 
 /* basic reset */
-h1,h2,h3 { clear: both; }
-h2 { margin-top: 2.5em; }
+h1,h2,h3,h4,h5,h6 { clear: both; margin-top: 2em; }
+h1 { font-size: 2em; margin-top: 0.5em }
+h1::first-line { font-size: 3rem; }
+h2 { font-size: 1.75em; }
+h3 { font-size: 1.5em; }
+h5 { font-size: 1.15em; }
+h6 { font-size: 1em;  }
 
 code { padding: 1px 5px; background-color: #ddd; white-space: pre-wrap; }
 pre { padding: 5px; margin: 3px 0; line-height: 1.4em; background-color: #e9e9e9; }
@@ -125,7 +132,7 @@ caption.top { caption-side: top; }
 caption.bottom { caption-side: bottom; }
 
 pre.source { white-space: pre-wrap; background-color: #E3F2FD; margin: 0; }
-pre.source span { color: #bbb; }
+pre.source span { color: #39CCCC; }
 
 .output { background-color: #fff9cc; }
 

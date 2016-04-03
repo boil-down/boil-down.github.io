@@ -3,10 +3,10 @@
 
 ***{article}[a4 bc-white]
 
-=== User Manual ===
-=== for the boildown markup language ===
+______________________ boildown \\ User Manual _____________________[<>][`]
 
-=== Principles ===
+1 Principles
+
 Depending on your knowledge and understanding of programming, interpreters and
 markup languages the following list of principle might help you a lot in 
 understanding how the markup works. 
@@ -30,7 +30,8 @@ Otherwise just skip and ignore them and learn from the examples below.
 * start and end marks of inline markups are identical (escaping is an exception)
 * inline marks do not use combinations of different characters
 
-=== Text Formatting ===
+2 Text Formatting
+
 Semantic markups use single character marks:
 ? _emphasis_
 
@@ -83,7 +84,8 @@ Stylistic or editorial markups use two character marks:
 ? ++inserted++
 
 
-=== Inline Escaping ===
+3 Inline Escaping
+
 Text in-between double curly brackets `{{{{}}`...`{{}}}}` is not interpreted. 
 ? {{*plain* _text_}}
 
@@ -91,7 +93,8 @@ Escaped sections can be contained within inline elements.
 ? `{{*plain* _text_}}`
 ? *plain {{_text_}}*
 
-=== Special Characters ===
+
+4 Special Characters
  
 Manual line breaks are forced using `\\`:
 ? manual line \\ break
@@ -111,7 +114,8 @@ HTML-entities can be used by name:
 ? &amp;loz;
 
 
-=== Links ===
+5 Links
+
 Links are given in pairs of `[[_URL_ _label_]]`:
 ? [[/relative/url label]]
 
@@ -127,7 +131,8 @@ Link creation can be escaped as usual:
 ? {{http://dilbert.com/}}
 
 
-=== Editing ===
+6 Editing
+
 ? ---
 ? deleted content
 ? ---
@@ -142,30 +147,31 @@ Using option to set date of edit:
 ? Added 1.of April
 ? +++
 
-=== Headings ===
-Use three or more `=` on each side of a heading:
-? === Default Level ===
 
-When two headings directly follow each other the second is considered a subtitle:
-? === Main ===
-? === Sub ===
+7 Headings
 
-Headings nest within minipages:
-? ***
-? === Nested one level ===
-? ****
-? === Nested two levels ===
-? ****
-? ***
+Titles use 3 or more underscores:
+? ___ Title ___
+? _______ Title
+
+Parts, chapters and sections are numbered:
+? 1 Chapter 1
+? 2 Chapter 2
+? 2.1 Section Foo
+? 2.2 Section Bar
+
+The section numbers are usable as link targets.
+
+A index or appendix can use a letter followed by `)`:
+? A) Appendix A
+? X) Bibliography
 
 To specify the name of a headings anchor use `{_..._}`:
-? === Heading ==={anchorname}
-
-To use small caps in headings just use spaces to separate:
-? === ==Small Caps== ===
+? 1.1 Heading {anchorname}
 
 
-=== Quoting ===
+8 Quoting
+
 Simple block quotes start with `> ` (space!): 
 ? > a quote using
 ? > multiple lines
@@ -201,7 +207,8 @@ Using minipages to position a cite footer.
 ? > ***
 
 
-=== Separator Lines ===
+9 Separator Lines
+
 Any line that does start with whitespace and that just contains whitespace and 
 at least 3 minus, plus or asterisks symbols is a separator line.
 
@@ -220,7 +227,8 @@ Separator lines are empty but proper blocks, styles can be used:
 ?  -------------[40%][<=][#000000]
 
 
-=== Lists ===
+10 Lists
+
 Ordered lists start at the number of the first item given.
 The number or letter has to followed by a dot and a space `n. `:
 ? 10. one
@@ -274,7 +282,8 @@ per level.
 ?     ```
 
 
-=== Listings ===
+11 Listings
+
 ? ```
 ? 1 * 2 * 3 = 6
 ? ```
@@ -298,7 +307,8 @@ Give samples
 ? ~~~
 
 
-=== Images ===
+12 Images
+
 Images are given in format `( _URL_ _[title]_ )`:
 ? ( bee.png a bee )
 
@@ -316,9 +326,9 @@ If the caption isn't stated first, the caption goes below the images:
 ? (( a *bee* ))
 
 
-=== Tables ===
+13 Tables
 
-? :: green colors ::[20%]['][pad5][=>]
+? :: green colors ::['][<=>]
 ? :.........:[#4CAF50]
 ? : Green   :*{2}
 ? :.........:[#4CAF50]
@@ -357,7 +367,8 @@ If the caption isn't stated first, the caption goes below the images:
 ? :.........:
 
 
-=== Minipages ===
+14 Minipages
+
 ? ***{aside}[<>][#F44336]
 ? ****[50%][#2196F3][<=]
 ? another page within a page
@@ -369,11 +380,15 @@ If the caption isn't stated first, the caption goes below the images:
 ? ***
 
 
-=== Self Documentation ===
+15 Self Documentation
 
-? ! _shows_ the output
+? ? _shows_ an example
 
-=== Document Setup ===
+? ! _shows_ the HTML
+
+
+16 Document Setup
+
 As blocks cope with missing end blocks one can start a document with a minipage
 to apply some _global_ options.
 

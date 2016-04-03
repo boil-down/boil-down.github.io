@@ -1,8 +1,10 @@
-***[screen ff-sans bc-white]
+***[slideshow ff-sans bc-white]
 
 ****[manual][<>]
-=== COLORS ===
-=== BACKGROUND ===
+___COLORS___
+
+A) BACKGROUND 
+
 :: background colors ::[c-white cp-2][100%][<>]
 :............:
 : bc-black   :[bc-black][12.5%]
@@ -25,6 +27,33 @@
 :............:
 : bc-white   :{8}[bc-white c-black bc--silver bw-1]
 :............:
+
+B) FOREGROUND
+
+:: foreground colors ::[cp-2][100%][<>]
+:............:
+: c-black   :[c-black][12.5%]
+: c-navy    :[c-navy][12.5%]
+: c-blue    :[c-blue][12.5%]
+: c-aqua    :[c-aqua c-black][12.5%]
+: c-teal    :[c-teal][12.5%]
+: c-olive   :[c-olive][12.5%]
+: c-green   :[c-green][12.5%]
+: c-lime    :[c-lime][12.5%]
+:...........:
+: c-silver  :[c-silver]
+: c-gray    :[c-gray]
+: c-purple  :[c-purple]
+: c-fuchsia :[c-fuchsia]
+: c-maroon  :[c-maroon]
+: c-red     :[c-red]
+: c-orange  :[c-orange]
+: c-yellow  :[c-yellow c-black]
+:............:
+: c-white   :{8}[c-white bc-black]
+:............:
+
+
 ****
 
 ***

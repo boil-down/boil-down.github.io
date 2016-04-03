@@ -1,7 +1,10 @@
-***[screen ff-sans bc-black c-red]
+***[screen ff-sans bc-black c-white]
 
-=== 404 ===
-===  NOT FOUND ===
+___ 404 ___[c-red]
+___  NOT FOUND ___[c-red]
 
- !``$target$``!{c-white}
+A) ``$target$``
+
+Nothing here...
+
 ***

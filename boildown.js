@@ -16,7 +16,7 @@ var bd = (function() {
 		[ Sample,      /^\? / ],
 		[ List,        /^\* / ],
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
-		[ Heading,     /^={3,}(.+?)(?:={3,})(?:\{(\w+)\})?((?:\[[^\]]+\])*)?$/ ],
+		[ Heading,     /^(_{3,}|[A-Z]\) |(?:\d+(?:\.\d+)*){1,6} )(.+?)(?:_*(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?$/ ],
 		[ Table,       /^([:\|]):?(.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?$/ ],
 		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+?=&]?){1,20}))\s+([-+ ,.:\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
 		[ Paragraph,   /^(.|$)/ ]
@@ -48,6 +48,7 @@ var bd = (function() {
 		[" <s>$1</s> ",         / -([^- \t].*?[^- \t])- /g ],
 		[" <def>$1</def> ",     / :([^: \t].*?[^: \t]): /g ],		
 		["<span style='color: $2$3;'>$1</span>", /::([^:].*?)::\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
+		["<a href=\"$1\" class='bd-include'>$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+?=&]?){1,20}) (.+?)\]\]\*/g ],
 		["<a href=\"$1\">$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+?=&]?){1,20}) (.+?)\]\]/g ],
 		["$1<a href=\"$2$3\">$3</a>", /(^|[^=">])(https?:\/\/|www\.)((?:[-\w]{0,15}[.:/#+?=&]?){1,20})/g ],
 		["<a href=\"#sec-$1\">$1</a>", /\[\[(\d+(?:\.\d+)*)\]\]/g ],
@@ -75,6 +76,7 @@ var bd = (function() {
 		[ /^>$/,  "text-align", "right"],
 		[ /^<=$/, "float", "left"],
 		[ /^=>$/, "float", "right"],
+		[ /^<=>$/, "margin", "0 auto"],
 		[ /^<<</, "clear", "both"],
 		[ /^\\\\$/, "white-space", "pre-wrap"],
 	];
@@ -185,14 +187,15 @@ var bd = (function() {
 	}
 
 	function Heading(doc, start, end, n, pattern) {
-		if (n == 2 && doc.levels[1] === 0) { n = 1; }
-		if (start > 0 && pattern.test(doc.line(start-1))) { n++; }
-		doc.levels[n]++;
-		var textIdStyle = pattern.exec(doc.line(start));
-		var id = textIdStyle[2] ? textIdStyle[2] : text2id(textIdStyle[1]);
+		var noTextIdStyle = pattern.exec(doc.line(start));
+		var id = noTextIdStyle[3] ? noTextIdStyle[3] : text2id(noTextIdStyle[2]);
+		var title = noTextIdStyle[1].startsWith("___");
+		if (!title) {
+			doc.add("\n<a id=\"sec-"+noTextIdStyle[1].replace(")", "").trim()+"\"></a>");
+		}
 		doc.add("\n<a id=\""+id+"\"></a>");
-		doc.add("<a id=\"sec"+doc.levels.slice(1, n+1).join('.')+"\"></a>");
-		doc.add("\n<h"+n+" "+doc.styles(textIdStyle[3])+">"+processLine(textIdStyle[1])+"</h"+n+">\t");
+		var n = title ? 1 : noTextIdStyle[1].split(/\./).length+1;
+		doc.add("\n<h"+n+" "+doc.styles(noTextIdStyle[4])+">"+processLine(noTextIdStyle[2])+"</h"+n+">\t");
 		return start+1;
 	}
 
