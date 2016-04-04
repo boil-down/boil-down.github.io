@@ -16,41 +16,42 @@ var bd = (function() {
 		[ Sample,      /^\? / ],
 		[ List,        /^\* / ],
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
-		[ Heading,     /^([ \t]{3}|[A-Z]\)? |(?:[\dIVX]+(?:\.\d+)*){1,6} )\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
+		[ Heading,     /^([ \t]{3}|[A-Z#]\)? |(?:[\dIVX]+(?:\.\d+)*){1,6} )\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
 		[ Table,       /^([:\|]):?(.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?$/ ],
-		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+?=&]?){1,20}))\s+([-+ ,.:\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
+		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}))\s+([-+ ,.\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
 		[ Paragraph,   /^(.|$)/ ]
 	];
 
 	const INLINE = [
-		["<br/>",               / \\\\(?: |$)/g ],
-		["$1<wbr>$2",           /(\w)\\-(\w)/g ],
-		["$1&mdash;$2",         /(^| )-{3}($| )/g ],
-		["$1&ndash;$2",         /(^| )--($| )/g ],
-		["&hellip;",            /\.\.\./g ], 
-		["&$1;",                /&amp;(\w{2,16});/g ], // unescape HTML entities
-		["<q>$2</q>$3",         /([']{1,})(.*?[^'])\1($|[^'])/g, 5],
-		["<sub>$2</sub>$3",     /([~]{1,})(.*?[^~])\1($|[^~])/g, 5],
-		["<sup>$2</sup>$3",     /([\^]{1,})(.*?[^\^])\1($|[^\^])/g, 5 ],
-		["<del>$1</del>",       /--(..*?)--/g ],
-		["<ins>$1</ins>",       /\+\+(..*?)\+\+/g ],
+		["<cite>$1</cite>",      /"(..*?)"/g ], // first! messes with attributes otherwise
+		["<br class=\"newpage\"/>", / \\\\\*(?: |$)/g ],
+		["<br/>",                / \\\\(?: |$)/g ],
+		["$1<wbr>$2",            /(\w)\\-(\w)/g ],
+		["$1&mdash;$2",          /(^| )-{3}($| )/g ],
+		["$1&ndash;$2",          /(^| )--($| )/g ],
+		["&hellip;",             /\.\.\./g ], 
+		["&$1;",                 /&amp;(\w{2,16});/g ], // unescape HTML entities
+		["<q>$2</q>$3",          /('{1,})(.*?[^'])\1($|[^'])/g, 5],
+		["<sub>$2</sub>$3",      /(~{1,})(.*?[^~])\1($|[^~])/g, 5],
+		["<sup>$2</sup>$3",      /(\^{1,})(.*?[^\^])\1($|[^\^])/g, 5 ],
+		["<del>$1</del>",        /--(..*?)--/g ],
+		["<ins>$1</ins>",        /\+\+(..*?)\+\+/g ],
 		["<u class='$2'>$1</u>", /!(..*?)!\{([-a-z]+)\}/g ],
-		["<tt>$1</tt>",         /``(..*?)``/g ],
+		["<tt>$1</tt>",          /``(..*?)``/g ],
 		["<span style='font-variant:small-caps;'>$1</span>", /==(..*?)==/g ],
 		["<span style='text-decoration: underline;'>$1</span>", /__(..*?)__/g ],
-		["<kbd>$1</kbd>",       /@(..*?)@/g ],
-		["<code>$1</code>",     /`(..*?)`/g ],
-		["<abbr>$1</abbr>",     /\.([A-Z]{2,6})\./g ],
-		["<cite>$1</cite>",     /"(..*?)"/g ],
-		["<strong>$1</strong>", /\*(..*?)\*/g ],
-		["<em>$1</em>",         /_(..*?)_/g ],
-		[" <i>$1</i> ",         / \/([^\/ \t].*?[^\/ \t])\/ /g ],
-		[" <s>$1</s> ",         / -([^- \t].*?[^- \t])- /g ],
-		[" <def>$1</def> ",     / :([^: \t].*?[^: \t]): /g ],		
+		["<kbd>$1</kbd>",        /@(..*?)@/g ],
+		["<code>$1</code>",      /`(..*?)`/g ],
+		["<abbr>$1</abbr>",      /\.([A-Z]{2,6})\./g ],
+		["<strong>$1</strong>",  /\*(..*?)\*/g ],
+		["<em>$1</em>",          /_(..*?)_/g ],
+		[" <i>$1</i> ",          / \/([^\/ \t].*?[^\/ \t])\/ /g ],
+		[" <s>$1</s> ",          / -([^- \t].*?[^- \t])- /g ],
+		[" <def>$1</def> ",      / :([^: \t].*?[^: \t]): /g ],		
 		["<span style='color: $2$3;'>$1</span>", /::([^:].*?)::\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
-		["<a href=\"$1\" class='bd-include'>$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+?=&]?){1,20}) (.+?)\]\]\*/g ],
-		["<a href=\"$1\">$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+?=&]?){1,20}) (.+?)\]\]/g ],
-		["$1<a href=\"$2$3\">$3</a>", /(^|[^=">])(https?:\/\/|www\.)((?:[-\w]{0,15}[.:/#+?=&]?){1,20})/g ],
+		["<a href=\"$1\" class='bd-include'>$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}) (.+?)\]\]\*/g ],
+		["<a href=\"$1\">$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}) (.+?)\]\]/g ],
+		["$1<a href=\"$2$3\">$3</a>", /(^|[^=">])(https?:\/\/|www\.)((?:[-\w]{0,15}[.\/#+?=&]?){1,20})/g ],
 		["<a href=\"#sec-$1\">$1</a>", /\[\[(\d+(?:\.\d+)*)\]\]/g ],
 		["<sup><a href='#fnote$1'>$1</a></sup>", /\^\[(\d+)\]/g ],
 		//TODO [[...]]* (a link that is meant as an include; support line slicing ala #L10-L14)
@@ -87,7 +88,6 @@ var bd = (function() {
 	function Doc(markup) {
 		this.markup = markup;
 		this.lines  = markup.split(/\r?\n/g);
-		this.levels = [0,0,0,0,0,0,0];
 		this.html   = "";
 		this.meta   = [];
 		// common functions
@@ -110,20 +110,22 @@ var bd = (function() {
 		return url && url[1] ? decodeURIComponent(url[1]) : undefined;
 	}
 
-	function processMarkup(markup) {
+	function processMarkup(markup, start, end) {
 		var doc = new Doc(markup);
-		doc.process(0, doc.lines.length, 2); // h2 is default start heading level
+		start = start || 0;
+		end = end || doc.lines.length;
+		doc.process(start, end);
 		return doc.html;
 	}
 
 	/* common functions on documents - must be called so this is the document */
 
-	function process(start, end, level) {
+	function process(start, end) {
 		var i = start;
 		while (i < end) {
 			var before = i;
 			var block = first(BLOCKS, this.lines[i], 1);
-			i = block[0](this, i, end, level, block[1]);
+			i = block[0](this, i, end, block[1]);
 			if (i === before) { 
 				if (console && console.log) { console.log("endless loop at line "+i+": "+this.lines[i]); }
 				i++; // error recovery: go on on next line
@@ -156,7 +158,7 @@ var bd = (function() {
 
 	// BLOCK functions return the line index after the block
 
-	function Meta(doc, start, end, level) {
+	function Meta(doc, start, end) {
 		var line = doc.line(start);
 		var i = line.indexOf(':');
 		if (i > 0) {		
@@ -165,12 +167,12 @@ var bd = (function() {
 		return start+1;
 	}
 
-	function Separator(doc, start, end, level) {
+	function Separator(doc, start, end) {
 		doc.add("<hr "+doc.styles(doc.line(start))+" />\n");
 		return start+1;
 	}
 
-	function Paragraph(doc, start, end, level) {
+	function Paragraph(doc, start, end) {
 		var line = doc.line(start);
 		if (isBlank(line)) {
 			doc.add("\n");
@@ -186,11 +188,11 @@ var bd = (function() {
 		return start+1;
 	}
 
-	function Heading(doc, start, end, n, pattern) {
+	function Heading(doc, start, end, pattern) {
 		var noTextIdStyle = pattern.exec(doc.line(start));
 		var id = noTextIdStyle[3] ? noTextIdStyle[3] : text2id(noTextIdStyle[2]);
-		var title = noTextIdStyle[1].trim().length === 0;
-		if (!title) {
+		var title = /^   /.test(noTextIdStyle[1]);
+		if (/[A-Z0-9]/.test(noTextIdStyle[1])) {
 			doc.add("\n<a id=\"sec-"+noTextIdStyle[1].replace(")", "").trim()+"\"></a>");
 		}
 		doc.add("\n<a id=\""+id+"\"></a>");
@@ -203,48 +205,48 @@ var bd = (function() {
 		return text.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").toLowerCase();
 	}
 
-	function prefixedBlock(doc, start, end, level, pattern, tag, attr) {
+	function prefixedBlock(doc, start, end, pattern, tag, attr) {
 		var i = doc.unindent(2, start, end, pattern);
 		doc.add("<"+tag+" "+attr+">\n"); 
-		doc.process(start, i, level+1);
+		doc.process(start, i);
 		doc.add("</"+tag+">\n");
 		return i;
 	}
 
-	function fencedBlock(doc, start, end, level, pattern, tag, attr) {
+	function fencedBlock(doc, start, end, pattern, tag, attr) {
 		var i = doc.scan(start+1, end, pattern);
 		doc.add("<"+tag+" "+attr+" "+doc.styles(doc.line(start), "block")+">\n"); 
-		doc.process(start+1, i, level+1);
+		doc.process(start+1, i);
 		doc.add("</"+tag+">\n");
 		return i+1;
 	}
 
-	function Blockquote(doc, start, end, level, pattern) {
+	function Blockquote(doc, start, end, pattern) {
 		var attr = pattern.exec(doc.line(start))[1];
 		if (attr) { attr = "cite='"+attr+"'"; };
-		return fencedBlock(doc, start, end, level, pattern, "blockquote", attr);
+		return fencedBlock(doc, start, end, pattern, "blockquote", attr);
 	}
 
-	function Blockquote2(doc, start, end, level, pattern) {
-		return prefixedBlock(doc, start, end, level, pattern, "blockquote", "");
+	function Blockquote2(doc, start, end, pattern) {
+		return prefixedBlock(doc, start, end, pattern, "blockquote", "");
 	}
 
-	function Edit(doc, start, end, level, pattern) {
+	function Edit(doc, start, end, pattern) {
 		var line = doc.line(start);
 		var tag = line.startsWith("---") ? "del" : "ins";
 		var attr = pattern.exec(line)[1];
 		if (attr) { attr = "datetime='"+attr+"'"; }
-		return fencedBlock(doc, start, end, level, pattern, tag, attr);
+		return fencedBlock(doc, start, end, pattern, tag, attr);
 	}
 
-	function Output(doc, start, end, level, pattern) {
+	function Output(doc, start, end, pattern) {
 		var i = doc.unindent(2, start, end, pattern);
 		doc.add("<table class='describe'><tr><td><pre class='source'><code>");
 		var l0 = doc.html.length;
 		// following line must be done before processing the lines!
 		var example = escapeHTML(doc.lines.slice(start, i).join("\n"));
 		example = example.replace(/ /g, "<span>&blank;</span>");
-		doc.process(start, i, level);
+		doc.process(start, i);
 		var content = escapeHTML(doc.html.substring(l0).trim());
 		doc.html=doc.html.substring(0, l0);
 		doc.add(example);
@@ -254,14 +256,14 @@ var bd = (function() {
 		return i;
 	}
 
-	function Sample(doc, start, end, level, pattern) {
+	function Sample(doc, start, end, pattern) {
 		var i = doc.unindent(2, start, end, pattern);
 		doc.add("<table class='example'><tr><td><pre class='source'><code>");
 		var l0 = doc.html.length;
 		// following line must be done before processing the lines!
 		var example = escapeHTML(doc.lines.slice(start, i).join("\n"));
 		example = example.replace(/ /g, "<span>&blank;</span>");
-		doc.process(start, i, level);
+		doc.process(start, i);
 		var content = doc.html.substring(l0);
 		doc.html=doc.html.substring(0, l0);
 		doc.add(example);
@@ -271,7 +273,7 @@ var bd = (function() {
 		return i;
 	}
 
-	function Listing(doc, start, end, level, pattern) {
+	function Listing(doc, start, end, pattern) {
 		var mark = doc.line(start);
 		var keywords = pattern.exec(mark)[1]
 		if (keywords) { keywords = keywords.split(" "); }
@@ -302,7 +304,7 @@ var bd = (function() {
 		return i+1;
 	}
 
-	function Figure(doc, start, end, level, pattern) {
+	function Figure(doc, start, end, pattern) {
 		var i = start;
 		var images = [];
 		var caption = "";
@@ -336,7 +338,7 @@ var bd = (function() {
 		return i;
 	}
 
-	function Table(doc, start, end, level, pattern) {
+	function Table(doc, start, end, pattern) {
 		var i = start;
 		var firstRow = true;
 		while (i < end && pattern.test(doc.line(i))) {
@@ -372,7 +374,7 @@ var bd = (function() {
 		return i;
 	}
 
-	function List(doc, start, end, level, pattern) {
+	function List(doc, start, end, pattern) {
 		var i = start;		
 		var bullet = pattern.test("* ");
 		var no = pattern.exec(doc.line(i))[1];
@@ -382,7 +384,7 @@ var bd = (function() {
 			doc.lines[i] = doc.lines[i].substring(doc.lines[i].indexOf(' '));
 			i = doc.unindent(2, i+1, end, /^(?:(?:[ \t]{2})|\s*$)/);
 			doc.add("<li>\n\t");
-			doc.process(i0, i, level);
+			doc.process(i0, i);
 			doc.add("</li>\n");
 		}
 		doc.add( bullet ? "</ul>\n" : "</ol>\n");
@@ -392,7 +394,7 @@ var bd = (function() {
 	function listStart (item) { return item === '#' ? 1 : parseInt(item) ? parseInt(item) : item.charCodeAt() - listType(item).charCodeAt() + 1; } 
 	function listType  (item) { var c = item.charAt(0); return /\d|#/.test(c) ? '1' : /i/i.test(c) ? c : /[A-Z]/.test(c) ? 'A' : 'a'; }
 
-	function Minipage(doc, start, end, level, pattern) {
+	function Minipage(doc, start, end, pattern) {
 		var line = doc.line(start);
 		var page = pattern.exec(line);
 		var i = doc.scan(start+1, end, new RegExp("^"+page[1].replace(/\*/g, "\\*")+"($|[^\*])"));
@@ -401,7 +403,7 @@ var bd = (function() {
 		var tag = retag? page[2] : "div";
 		var classes = "bd-mp "+(tagged && !retag ? page[2] : "");
 		doc.add("<"+tag+" "+doc.styles(line, classes)+"><div>\n");
-		doc.process(start+1, i, level+1); 
+		doc.process(start+1, i); 
 		doc.add("</div></"+tag+">\n");
 		return i+1;
 	}

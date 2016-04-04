@@ -3,7 +3,7 @@
 
 ***{article}[a4 bc-white]
 
-                         boildown \\ User Manual     [<>][`]
+                         boildown \\ User Manual     [<>]
 
 1 Principles
 
@@ -57,11 +57,11 @@ Semantic markups use single character marks:
 
 ...one or more when nesting makes sense...
 
-? x^superscript^
+? base^superscript^
 ? ^a^^b^^ ^
 ? ^^b^a^ ^^
 
-? x~subscript~
+? base~subscript~
 ? ~a~~b~~ ~
 ? ~~b~a~~ ~
 
@@ -100,6 +100,9 @@ Manual line breaks are forced using `\\`:
 ? manual line \\ break
 Otherwise new paragraphs start after blank lines or within a new block.
 
+ For manual page break a anterisk `*` is added to a usual line break:
+? manual page \\* break
+
 Line breaks opportunities can be marked using `\-`:
 ? along\-word\-that\-might\-break\-somewhere
 
@@ -130,8 +133,24 @@ Link creation can be escaped as usual:
 
 ? {{http://dilbert.com/}}
 
+6 Includes
 
-6 Editing
+Links can also be used to include other boildown documents or slices of them
+into another document. Such links are marked with an extra `*`:
+
+? [[part.bd an include]]*
+
+Like everything else the include will be done by the client. 
+ A client may choose to not do includes in which case the link stays an ordinary 
+link with an addition CSS class `bd-include`.
+
+Includes can also be done for a range of lines, using `#L_{from}_-_{to}_`:
+
+? [[part.bd#L1-L2 range include]]*
+
+TODO includes by heading section range (I-V)  
+
+7 Editing
 
 ? ---
 ? deleted content
@@ -148,13 +167,14 @@ Using option to set date of edit:
 ? +++
 
 
-7 Headings
+8 Headings
 
  A line start starts with at least 3 spaces or tabs is a title:
 ?    Title
 ?      Title
 
-Parts, chapters and sections are numbered:
+Parts, chapters and sections are numbered 
+(and must be followed by a space and not end with a dot):
 ? 1 Chapter 1
 ? 2 Chapter 2
 ? 2.1 Section Foo
@@ -167,15 +187,21 @@ Or when using parts:
 
 The section numbers become anchors.
 
- A index or appendix can use a letter followed by `)`:
+An appendix can used upper case letters that might be followed by a `)` but
+must be followed by a space afterwards.
 ? A) Appendix A
-? X) Bibliography
+
+ A unnumbered index like a bibliography can use `#` followed by a space:
+? # Bibliography
 
 To specify the name of a headings anchor use `{_..._}`:
 ? 1.1 Heading {anchorname}
 
+Headings are usual block elements to options can be used:
 
-8 Quoting
+? 1 Chapter 1 [=>]
+
+9 Quoting
 
 Simple block quotes start with `> ` (space!): 
 ? > a quote using
@@ -212,7 +238,7 @@ Using minipages to position a cite footer.
 ? > ***
 
 
-9 Separator Lines
+10 Separator Lines
 
 Any line that does start with whitespace and that just contains whitespace and 
 at least 3 minus, plus or asterisks symbols is a separator line.
@@ -232,7 +258,7 @@ Separator lines are empty but proper blocks, styles can be used:
 ?  -------------[40%][<=][#000000]
 
 
-10 Lists
+11 Lists
 
 Ordered lists start at the number of the first item given.
 The number or letter has to followed by a dot and a space `n. `:
@@ -287,7 +313,7 @@ per level.
 ?     ```
 
 
-11 Listings
+12 Listings
 
 ? ```
 ? 1 * 2 * 3 = 6
@@ -312,7 +338,7 @@ Give samples
 ? ~~~
 
 
-12 Images
+13 Images
 
 Images are given in format `( _URL_ _[title]_ )`:
 ? ( bee.png a bee )
@@ -331,7 +357,7 @@ If the caption isn't stated first, the caption goes below the images:
 ? (( a *bee* ))
 
 
-13 Tables
+14 Tables
 
 ? :: green colors ::['][<=>]
 ? :.........:[#4CAF50]
@@ -372,7 +398,7 @@ If the caption isn't stated first, the caption goes below the images:
 ? :.........:
 
 
-14 Minipages
+15 Minipages
 
 ? ***{aside}[<>][#F44336]
 ? ****[50%][#2196F3][<=]
@@ -385,14 +411,14 @@ If the caption isn't stated first, the caption goes below the images:
 ? ***
 
 
-15 Self Documentation
+16 Documentation
 
 ? ? _shows_ an example
 
 ? ! _shows_ the HTML
 
 
-16 Document Setup
+17 Page
 
 As blocks cope with missing end blocks one can start a document with a minipage
 to apply some _global_ options.

@@ -5,8 +5,8 @@
 .a5 { max-width: 14.8cm; padding: 2cm; margin: 0 auto; box-sizing: border-box; }
 .a6 {  max-width: 10.5cm; padding: 1.5cm; margin: 0 auto; box-sizing: border-box; }
 
-.slideshow { min-height: 100%; }
-.manual > div { max-width: 40em; margin: 0 auto; padding: 1cm 0; }
+.scroll { min-height: 100%; }
+.page > div { max-width: 40em; margin: 0 auto; padding: 1cm 0; }
 .screen { height: 100%; }
 .screen > div { width: 800px; position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
@@ -67,7 +67,7 @@
 .bc--purple { border-color: #B10DC9; }
 .bc--black  { border-color: #111111; }
 .bc--gray   { border-color: #AAAAAA; }
-.bc--silver { border-color: #DDDDDD; }
+.bc--silver, tr.bc--silver td { border-color: #DDDDDD; }
 .bc--white  { border-color: #FFFFFF; }
 
 /* borders */
@@ -140,7 +140,7 @@ table.describe, table.example { width: 100%; border-spacing: 5px 0; }
 table.describe td { width: 50%; vertical-align: top; }
 table.example td { width: 50%; }
 
-table.user { border-spacing: 0 0; }
+table.user { border-spacing: 0 0; border-collapse: collapse; }
 .user td, .user th { padding: 3px; }
 .user tr.tborder > * { border-top: 2px solid black;  }
 .user tr.bborder > * { border-bottom: 2px solid black;  }

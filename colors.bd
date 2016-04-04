@@ -1,11 +1,11 @@
-***[slideshow ff-sans bc-white]
+***[scroll ff-sans bc-white]
 
-****[manual][<>]
+****[page][<>]
                          COLORS
 
 A) BACKGROUND 
 
-:: background colors ::[c-white cp-2][100%][<>]
+::          ::[c-white cp-2][100%][<>]
 :............:
 : bc-black   :[bc-black][12.5%]
 : bc-navy    :[bc-navy][12.5%]
@@ -15,7 +15,7 @@ A) BACKGROUND
 : bc-olive   :[bc-olive][12.5%]
 : bc-green   :[bc-green][12.5%]
 : bc-lime    :[bc-lime][12.5%]
-:...........:
+:............:
 : bc-silver  :[bc-silver c-black]
 : bc-gray    :[bc-gray c-black]
 : bc-purple  :[bc-purple]
@@ -30,8 +30,8 @@ A) BACKGROUND
 
 B) FOREGROUND
 
-:: foreground colors ::[cp-2][100%][<>]
-:............:
+::         ::[cp-2][100%][<>][*]
+:...........:[bw-1 bc--silver]
 : c-black   :[c-black][12.5%]
 : c-navy    :[c-navy][12.5%]
 : c-blue    :[c-blue][12.5%]
@@ -39,8 +39,8 @@ B) FOREGROUND
 : c-teal    :[c-teal][12.5%]
 : c-olive   :[c-olive][12.5%]
 : c-green   :[c-green][12.5%]
-: c-lime    :[c-lime][12.5%]
-:...........:
+: c-lime    :[c-lime bc--silver][12.5%]
+:...........:[bw-1 bc--silver]
 : c-silver  :[c-silver]
 : c-gray    :[c-gray]
 : c-purple  :[c-purple]
@@ -49,9 +49,9 @@ B) FOREGROUND
 : c-red     :[c-red]
 : c-orange  :[c-orange]
 : c-yellow  :[c-yellow c-black]
-:............:
+:...........:
 : c-white   :{8}[c-white bc-black]
-:............:
+:...........:
 
 
 ****
