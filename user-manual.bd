@@ -116,41 +116,7 @@ Special punctuation marks:
 HTML-entities can be used by name:
 ? &amp;loz;
 
-
-5 Links
-
-Links are given in pairs of `[[_URL_ _label_]]`:
-? [[/relative/url label]]
-
-? [[http://dilbert.com/ dilbert]]
-
-Links without label are just given plain but they have to start with `http/s` or `www` to be auto-linked:
-
-? http://dilbert.com/
-? www.youtube.com
-
-Link creation can be escaped as usual:
-
-? {{http://dilbert.com/}}
-
-6 Includes
-
-Links can also be used to include other boildown documents or slices of them
-into another document. Such links are marked with an extra `*`:
-
-? [[part.bd an include]]*
-
-Like everything else the include will be done by the client. 
- A client may choose to not do includes in which case the link stays an ordinary 
-link with an addition CSS class `bd-include`.
-
-Includes can also be done for a range of lines, using `#L_{from}_-_{to}_`:
-
-? [[part.bd#L1-L2 range include]]*
-
-TODO includes by heading section range (I-V)  
-
-7 Editing
+5 Editing
 
 ? ---
 ? deleted content
@@ -167,7 +133,7 @@ Using option to set date of edit:
 ? +++
 
 
-8 Headings
+6 Headings
 
  A line start starts with at least 3 spaces or tabs is a title:
 ?    Title
@@ -201,7 +167,8 @@ Headings are usual block elements to options can be used:
 
 ? 1 Chapter 1 [=>]
 
-9 Quoting
+
+7 Quoting
 
 Simple block quotes start with `> ` (space!): 
 ? > a quote using
@@ -238,7 +205,7 @@ Using minipages to position a cite footer.
 ? > ***
 
 
-10 Separator Lines
+8 Separator Lines
 
 Any line that does start with whitespace and that just contains whitespace and 
 at least 3 minus, plus or asterisks symbols is a separator line.
@@ -256,6 +223,39 @@ at least 3 minus, plus or asterisks symbols is a separator line.
 Separator lines are empty but proper blocks, styles can be used:
 
 ?  -------------[40%][<=][#000000]
+
+
+9 Links
+
+Links are given in pairs of `[[_URL_ _label_]]`:
+? [[/relative/url label]]
+
+? [[http://dilbert.com/ dilbert]]
+
+Links without label are just given plain but they have to start with `http/s` or `www` to be auto-linked:
+
+? http://dilbert.com/
+? www.youtube.com
+
+Link creation can be escaped as usual:
+
+? {{http://dilbert.com/}}
+
+10 Includes
+
+Includes are just links with a hint for a reader that the target is meant to
+be included in the document at the link position. 
+The hint is done by adding an extra asterix `*` after the link:
+
+? [[part.bd an include]]*
+
+If a client does not include the link's target the link just has an extra class `bd-include`.
+
+Includes can also be done for a range of lines `_{file}_#L_{from}_-_L{to}_`:
+
+? [[part.bd#L1-L2 range include]]*
+
+TODO includes by heading section range (I-V)  
 
 
 11 Lists

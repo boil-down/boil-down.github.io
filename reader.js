@@ -51,6 +51,8 @@ var bdReader = (function() {
 	}
 
 	function includes(e, loaded) {
+		// FIXME 1 list per link (path downwards to avoid loops)
+		// FIXME a map of already loaded files to their markup
 		var links = e.getElementsByClassName('bd-include');
 		if (!links) { return; }
 		for (var i = 0; i < links.length; i++) {
