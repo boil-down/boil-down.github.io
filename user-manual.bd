@@ -5,30 +5,6 @@
 
                          boildown \\ User Manual     [<>]
 
-1 Principles
-
-Depending on your knowledge and understanding of programming, interpreters and
-markup languages the following list of principle might help you a lot in 
-understanding how the markup works. 
-Otherwise just skip and ignore them and learn from the examples below.
-
-* no escape to a less constraint language (like HTML)
-* aims to enable readable ASCII documents
-* _but_: no multiplicity in expressive possibilities (bears complexity)
-* interpretation is line wise (only)
-* semantics are never altered by subsequential lines
-* main loop determines where a block starts
-* blocks determine where they end 
-* blocks determine if and where to apply inline markup
-* inline markup cannot span multiple lines
-* not characters but sections of (inline) text are escaped 
-* inline markup is short rather than secured against unwanted matches 
-  (as it can be escaped easily)
-* empty lines only start/end paragraphs (but have no other semantic)
-* block nesting is done by consistent indentation
-* block start marks are left aligned (after potential indent; except separators)
-* start and end marks of inline markups are identical (escaping is an exception)
-* inline marks do not use combinations of different characters
 
 2 Text Formatting
 
@@ -410,6 +386,9 @@ If the caption isn't stated first, the caption goes below the images:
 ? and back in the outer minipage
 ? ***
 
+As blocks cope with missing end marks one can start a document with a minipage
+that is never closed to apply some _global_ options.
+
 
 16 Documentation
 
@@ -417,10 +396,3 @@ If the caption isn't stated first, the caption goes below the images:
 
 ? ! _shows_ the HTML
 
-
-17 Page
-
-As blocks cope with missing end blocks one can start a document with a minipage
-to apply some _global_ options.
-
-? ***[pad3]
