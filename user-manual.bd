@@ -3,7 +3,7 @@
 
 ***{article}[a4 bc-white]
 
-______________________ boildown \\ User Manual _____________________[<>][`]
+                         boildown \\ User Manual     [<>][`]
 
 1 Principles
 
@@ -150,9 +150,9 @@ Using option to set date of edit:
 
 7 Headings
 
-Titles use 3 or more underscores:
-? ___ Title ___
-? _______ Title
+ A line start starts with at least 3 spaces or tabs is a title:
+?    Title
+?      Title
 
 Parts, chapters and sections are numbered:
 ? 1 Chapter 1
@@ -160,9 +160,14 @@ Parts, chapters and sections are numbered:
 ? 2.1 Section Foo
 ? 2.2 Section Bar
 
-The section numbers are usable as link targets.
+Or when using parts:
+? I Part 1
+? I.1 Chapter 1
+? I.1.1 Section 1 in Chapter 1
 
-A index or appendix can use a letter followed by `)`:
+The section numbers become anchors.
+
+ A index or appendix can use a letter followed by `)`:
 ? A) Appendix A
 ? X) Bibliography
 
@@ -315,7 +320,7 @@ Images are given in format `( _URL_ _[title]_ )`:
 They are blocks with [[#options options]], here to make image float right:
 ? ( bee.png a bee )[=>]
 
-A gallery or _figure_ is done by a sequence of images, the caption `((`...`))` is optional.
+ A gallery or _figure_ is done by a sequence of images, the caption `((`...`))` is optional.
 ? (( bees        ))[<>]
 ? ( bee.png bee 1 )
 ? ( bee.png bee 2 )

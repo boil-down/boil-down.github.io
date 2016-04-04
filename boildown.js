@@ -16,7 +16,7 @@ var bd = (function() {
 		[ Sample,      /^\? / ],
 		[ List,        /^\* / ],
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
-		[ Heading,     /^(_{3,}|[A-Z]\) |(?:\d+(?:\.\d+)*){1,6} )(.+?)(?:_*(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?$/ ],
+		[ Heading,     /^([ \t]{3}|[A-Z]\)? |(?:[\dIVX]+(?:\.\d+)*){1,6} )\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
 		[ Table,       /^([:\|]):?(.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?$/ ],
 		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.:/#+?=&]?){1,20}))\s+([-+ ,.:\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
 		[ Paragraph,   /^(.|$)/ ]
@@ -189,7 +189,7 @@ var bd = (function() {
 	function Heading(doc, start, end, n, pattern) {
 		var noTextIdStyle = pattern.exec(doc.line(start));
 		var id = noTextIdStyle[3] ? noTextIdStyle[3] : text2id(noTextIdStyle[2]);
-		var title = noTextIdStyle[1].startsWith("___");
+		var title = noTextIdStyle[1].trim().length === 0;
 		if (!title) {
 			doc.add("\n<a id=\"sec-"+noTextIdStyle[1].replace(")", "").trim()+"\"></a>");
 		}
