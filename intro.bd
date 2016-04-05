@@ -1,9 +1,17 @@
 % v:beta
 % author: Jan Bernitt
 
-***{article}[a4 bc-white]
+***[a4]
 
-                         boildown \\ User Manual     [<>]
+                                   bd
+
+
+Boildown a definite flexible /lightweight markup language/ 
+that is easy to read, write *and implement*.
+
+1 Overview
+_{{_emphasis_}}_, *{{*strong emphasis*}}*, "{{"title"}}",
+ /{{/alternative voice/}}/ , -{{-inaccurate text-}}- , :{{:term:}}: 
 
 
 2 Text Formatting
@@ -13,23 +21,19 @@ Semantic markups use single character marks:
 
 ? *strong emphasis*
 
-? "cite"
+? "title"
 
 ?  /alternative voice/ 
 
 ?  -inaccurate text- 
 
-?  :definition: 
+?  :term: 
 
-? .ABBR.
+? !annotated!{bc-info}
 
 ? `code`, ```
 
 ? @user input@, @@@
-
-? !annotated!{spelling}
-? !annotated!{grammar}
-? !annotated!{bc-warning}
 
 ...one or more when nesting makes sense...
 
@@ -45,7 +49,7 @@ Semantic markups use single character marks:
 ? a '' 'quote' within a quote'',
 ? a ' ''quote'' within a quote'
 
-Stylistic or editorial markups use two character marks:
+Stylistic markups use two character marks:
 ? ``monospace``
 
 ? ==small caps==
@@ -54,10 +58,6 @@ Stylistic or editorial markups use two character marks:
 
 ? ::coloured::{orange}
 ? ::coloured::{#7FDBFF}
-
-? --deleted--
-
-? ++inserted++
 
 
 3 Inline Escaping
@@ -76,7 +76,7 @@ Manual line breaks are forced using `\\`:
 ? manual line \\ break
 Otherwise new paragraphs start after blank lines or within a new block.
 
- For manual page break a anterisk `*` is added to a usual line break:
+For manual page break a anterisk `*` is added to a usual line break:
 ? manual page \\* break
 
 Line breaks opportunities can be marked using `\-`:
@@ -90,19 +90,28 @@ Special punctuation marks:
 ? x -- y
 
 HTML-entities can be used by name:
-? &amp;loz;
+? &loz;
+
 
 5 Editing
+  Inline...
+? --deleted text--
 
+? ++added text++
+
+? !wrong text!{spelling}
+? !wrong text!{grammar}
+
+  Blocks...
 ? ---
-? deleted content
+? deleted block
 ? ---
 
 ? +++
-? added content
+? added block
 ? +++
 
-Using option to set date of edit:
+Using option `{...}` to set date of edit:
 
 ? +++{2016-04-01}
 ? Added 1.of April
@@ -112,8 +121,7 @@ Using option to set date of edit:
 6 Headings
 
  A line start starts with at least 3 spaces or tabs is a title:
-?    Title
-?      Title
+?       Title
 
 Parts, chapters and sections are numbered 
 (and must be followed by a space and not end with a dot):
@@ -133,8 +141,12 @@ An appendix can used upper case letters that might be followed by a `)` but
 must be followed by a space afterwards.
 ? A) Appendix A
 
- A unnumbered index like a bibliography can use `#` followed by a space:
-? # Bibliography
+ A unnumbered index like a bibliography can use `_` followed by a space:
+? _ Bibliography
+? _____ Bibliography _____
+
+Single word headings with just letters and digits can also be used bare
+? Bibliography
 
 To specify the name of a headings anchor use `{_..._}`:
 ? 1.1 Heading {anchorname}
@@ -217,6 +229,7 @@ Link creation can be escaped as usual:
 
 ? {{http://dilbert.com/}}
 
+
 10 Includes
 
 Includes are just links with a hint for a reader that the target is meant to
@@ -229,7 +242,7 @@ If a client does not include the link's target the link just has an extra class 
 
 Includes can also be done for a range of lines `_{file}_#L_{from}_-_L{to}_`:
 
-? [[part.bd#L1-L2 range include]]*
+? [[part.bd#L2-L3 range include]]*
 
 TODO includes by heading section range (I-V)  
 

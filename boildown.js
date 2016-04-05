@@ -4,9 +4,9 @@ var bd = (function() {
 
 	const BLOCKS    = [
 		[ Meta,        /^% / ],
-		[ Separator,   /^(?:(?:\s+[-+*]+){3,}|\s+[-+*]{3,})\s*((?:\[[^\]]+\])*)?$/ ],
-		[ Edit,        /^\+{3,}(?:\{([-\d]+)\})?/ ],
-		[ Edit,        /^-{3,}(?:\{([-\d]+)\})?/ ],
+		[ Separator,   /^(?:(?:\s+[-+*]+){3,}|\s+[-+*]{4,})\s*((?:\[[^\]]+\])*)?$/ ],
+		[ Edit,        /^\+{3}(?:\{([-\d]+)\})?/ ],
+		[ Edit,        /^-{3}(?:\{([-\d]+)\})?/ ],
 		[ Blockquote,  /^>{3,}(?:\{([ \w\.#]+)\})?/ ],
 		[ Blockquote2, /^> / ],
 		[ Minipage,    /^(\*{3,})(?:\{(\w+)\})?/ ],
@@ -16,13 +16,15 @@ var bd = (function() {
 		[ Sample,      /^\? / ],
 		[ List,        /^\* / ],
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
-		[ Heading,     /^([ \t]{3}|[A-Z#]\)? |(?:[\dIVX]+(?:\.\d+)*){1,6} )\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
 		[ Table,       /^([:\|]):?(.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?$/ ],
 		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}))\s+([-+ ,.\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
+		[ Heading,     /^([A-Z]\)?|(?:[\dIVX]+(?:\.\d+)*){1,6}|\s{5})\s\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
+		[ Heading,     /^(_+ )?([A-Z][\w]+)[\s_]*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
 		[ Paragraph,   /^(.|$)/ ]
 	];
 
 	const INLINE = [
+		["&$1;",                 /&amp;(\w{2,16});/g ], // unescape HTML entities
 		["<cite>$1</cite>",      /"(..*?)"/g ], // first! messes with attributes otherwise
 		["<br class=\"newpage\"/>", / \\\\\*(?: |$)/g ],
 		["<br/>",                / \\\\(?: |$)/g ],
@@ -30,7 +32,6 @@ var bd = (function() {
 		["$1&mdash;$2",          /(^| )-{3}($| )/g ],
 		["$1&ndash;$2",          /(^| )--($| )/g ],
 		["&hellip;",             /\.\.\./g ], 
-		["&$1;",                 /&amp;(\w{2,16});/g ], // unescape HTML entities
 		["<q>$2</q>$3",          /('{1,})(.*?[^'])\1($|[^'])/g, 5],
 		["<sub>$2</sub>$3",      /(~{1,})(.*?[^~])\1($|[^~])/g, 5],
 		["<sup>$2</sup>$3",      /(\^{1,})(.*?[^\^])\1($|[^\^])/g, 5 ],
@@ -42,7 +43,6 @@ var bd = (function() {
 		["<span style='text-decoration: underline;'>$1</span>", /__(..*?)__/g ],
 		["<kbd>$1</kbd>",        /@(..*?)@/g ],
 		["<code>$1</code>",      /`(..*?)`/g ],
-		["<abbr>$1</abbr>",      /\.([A-Z]{2,6})\./g ],
 		["<strong>$1</strong>",  /\*(..*?)\*/g ],
 		["<em>$1</em>",          /_(..*?)_/g ],
 		[" <i>$1</i> ",          / \/([^\/ \t].*?[^\/ \t])\/ /g ],
@@ -190,14 +190,15 @@ var bd = (function() {
 
 	function Heading(doc, start, end, pattern) {
 		var noTextIdStyle = pattern.exec(doc.line(start));
-		var id = noTextIdStyle[3] ? noTextIdStyle[3] : text2id(noTextIdStyle[2]);
-		var title = /^   /.test(noTextIdStyle[1]);
-		if (/[A-Z0-9]/.test(noTextIdStyle[1])) {
-			doc.add("\n<a id=\"sec-"+noTextIdStyle[1].replace(")", "").trim()+"\"></a>");
+		var no = noTextIdStyle[1];
+		var text = noTextIdStyle[2];
+		var id = noTextIdStyle[3] ? noTextIdStyle[3] : text2id(text);
+		var title = /^\s{5}$/.test(no);
+		if (/[A-Z0-9]/.test(no)) {
+			doc.add("\n<a id=\"sec-"+no.replace(")", "").trim()+"\"></a>");
 		}
-		doc.add("\n<a id=\""+id+"\"></a>");
-		var n = title ? 1 : noTextIdStyle[1].split(/\./).length+1;
-		doc.add("\n<h"+n+" "+doc.styles(noTextIdStyle[4])+">"+processLine(noTextIdStyle[2])+"</h"+n+">\t");
+		var n = title ? 1 : no ? no.split(/\./).length+1 : 2;
+		doc.add("\n<h"+n+" id=\""+id+"\" "+doc.styles(noTextIdStyle[4])+">"+processLine(text)+"</h"+n+">\t");
 		return start+1;
 	}
 

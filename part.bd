@@ -1,5 +1,7 @@
- !you don't see a link!{c-red} with label _an include_ because this text has been 
+***[bw-1 bc--red]
+you don't see a link with label _an include_ because this text has been 
 included from another document, namely [[/?url=part.bd part.bd]].
 
 ? not included 
 ? [[part.bd again]]*
+***

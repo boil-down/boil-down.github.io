@@ -43,6 +43,9 @@ var bdReader = (function() {
 					includes(doc, loaded);
 				}
 			}
+			if (window.location.hash) {
+				document.getElementById(window.location.hash.substring(1)).scrollIntoView();
+			}
 		}, function(status) {
 			if (config.redirect && url !== "404.bd") {
 				window.location="?url=404.bd&target="+encodeURIComponent(url);

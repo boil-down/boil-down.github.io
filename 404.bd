@@ -1,9 +1,9 @@
 ***[screen ff-sans bc-black c-white]
 
-    404       [c-red]
-    NOT FOUND [c-red]
+        404       [c-red]
+        NOT FOUND [c-red]
 
-A   ``$target$``
+#   ``$target$``
 
 Nothing here...
 

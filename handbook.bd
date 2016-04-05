@@ -2,12 +2,7 @@
 
 1 Principles
 
-Depending on your knowledge and understanding of programming, interpreters and
-markup languages the following list of principle might help you a lot in 
-understanding how the markup works. 
-Otherwise just skip and ignore them and learn from the examples below.
-
-* no escape to a less constraint language (like HTML)
+* no switch to a less constraint language (like HTML)
 * aims to enable readable ASCII documents
 * _but_: no multiplicity in expressive possibilities (bears complexity)
 * interpretation is line wise (only)
@@ -16,7 +11,7 @@ Otherwise just skip and ignore them and learn from the examples below.
 * blocks determine where they end 
 * blocks determine if and where to apply inline markup
 * inline markup cannot span multiple lines
-* not characters but sections of (inline) text are escaped 
+* escaping is done for text regions within a line (not for individual characters) 
 * inline markup is short rather than secured against unwanted matches 
   (as it can be escaped easily)
 * empty lines only start/end paragraphs (but have no other semantic)

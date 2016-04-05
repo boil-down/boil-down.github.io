@@ -8,27 +8,23 @@
 	<style>
 .column { width: 46%; margin: 2%; float: left; position: relative; }
 html { height: 100%; }
-#bdBody { background-color: #ccc; margin: 0; padding: 0; height: calc(100% - 40px); }
-#bdNavbar { background-color: #ddd; border-bottom: 1px solid #aaa; padding: 5px; height: 30px; text-align: center; position: fixed; width: 100%; top: 0; z-index: 1;  }
-#bdURL { padding: 7px 5px 3px 25px; font-size: 15px; font-family: monospace; width: 80%; color: #333; border: 1px solid #bbb; border-top-color: #999; border-radius: 3px; background-image: url(bd.png); background-position: 5px center; background-repeat: no-repeat; line-height: 16px; }
+#bdBody { height: 100%; }
+#bdNavbar { display: none; background-color: #f0f0f0; border-bottom: 1px solid #aaa; padding: 4px; text-align: center; position: fixed; width: 100%; top: 0; z-index: 1; }
+.bdNav #bdNavbar { display: block; }
+#bdURL { padding: 3px 3px 3px 25px; font-size: 15px; line-height: 18px; font-family: monospace; width: 85%; color: #333; border: 1px solid #ccc; border-top-color: #999; border-radius: 3px; background-image: url(bd.png); background-position: 5px center; background-repeat: no-repeat; }
 #bdURL:focus { outline: none; }
-#bdBtnShowMarkup { float: left; padding: 5px; cursor: pointer; font-family: monospace; font-size: 12px; color: #999; }
-#bdBtnShowMarkup:hover{color: #444; }
-#bdDocument { height: 100%; display: block; margin: 0 auto;  }
-#bdMarkup { margin: 0; padding: 5px 1em; display: none; width: 50%; float: left; box-sizing: border-box; position: absolute; }
+#bdDocument { height: 100%; display: block; margin: 0 auto; position: relative; top: 0; }
+#bdMarkup { margin: 0; padding: 5px 1em; display: none; width: 50%; float: left; box-sizing: border-box; position: absolute; top:0; }
 .bd-markup #bdMarkup { display: block; }
 .bd-markup #bdDocument { margin-left: 50%; }
-.bd-markup #bdBtnShowMarkup { color: #222; }
 	</style>
   </head>
   <body id="bdBody">
+	<pre id="bdMarkup"></pre>
+	<div id="bdDocument"></div>
+
 	<div id="bdNavbar">
-		<a id="bdBtnShowMarkup" onclick="document.getElementById('bdBody').classList.toggle('bd-markup')">{markup}</a>
 		<input type="text" id="bdURL" onkeypress="if (event.keyCode === 13) { window.document.location='?url='+encodeURIComponent(this.value); return true; }" />
-	</div>
-	<div style="margin-top: 40px; height: 100%; ">
-		<pre id="bdMarkup"></pre>
-		<div id="bdDocument"></div>
 	</div>
 
 	<script src="/boildown.js"></script>
@@ -44,6 +40,15 @@ html { height: 100%; }
 	if (target) {
 		document.getElementById('bdURL').value=target;
 	}
+
+	window.addEventListener("keyup", function(e){
+	    var key = e.keyCode || e.which;
+  		if (e.altKey && key == 78) {
+    		document.getElementById('bdBody').classList.toggle('bdNav');
+  		} else if (e.altKey && key == 77) {
+			document.getElementById('bdBody').classList.toggle('bd-markup');
+		}
+    }, false);
 	</script>
   </body>
 </html>
