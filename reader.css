@@ -115,7 +115,7 @@ code { padding: 1px 5px; background-color: #F0F0F0; white-space: pre-wrap; }
 pre { padding: 5px; margin: 3px 0; line-height: 1.4em; background-color: #F0F0F0; }
 pre code { background-color: inherit; padding: 0; }
 
-kbd { font-family: "Source Sans Pro", monospace; font-size: 12px; background: #222; color: white; min-width: 18px; height: 18px; display: inline-block; vertical-align: center; padding: 3px; line-height: 18px; text-align: center; border-radius: 4px; border: 2px outset #bbb; }
+kbd { font-family: "Source Sans Pro", monospace; font-size: 12px; background: #bbb; min-width: 18px; height: 18px; display: inline-block; vertical-align: center; padding: 3px; line-height: 18px; text-align: center; border-radius: 4px; border: 2px outset #ccc; }
 del { background-color: #FF4136; opacity: 0.5; }
 del.block { display: block; margin: 0 0 2em -1em; padding-left: 0.5em; border-left: 0.5em solid #FF4136; text-decoration: none; background-color: transparent; }
 ins { background-color: #7fff8c; text-decoration: none; }

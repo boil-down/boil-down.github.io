@@ -1,7 +1,7 @@
 % v:beta
 % author: Jan Bernitt
 
-***[a4]
+***[a4][<=]
 
                                    bd
 
@@ -389,11 +389,11 @@ If the caption isn't stated first, the caption goes below the images:
 
 15 Minipages
 
-? ***{aside}[<>][#F44336]
-? ****[50%][#2196F3][<=]
+? ***{aside}[<>][bc-yellow]
+? ****[50%][bc-red][<=]
 ? another page within a page
 ? ****
-? ****[50%][#4CAF50][=>]
+? ****[50%][bc-orange][=>]
 ? and another one besides
 ? ****
 ? and back in the outer minipage
