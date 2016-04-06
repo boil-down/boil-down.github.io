@@ -7,6 +7,9 @@ var bdReader = (function() {
 	}
 
 	function load(file, onSuccess, onError) {
+		if (!file.endsWith(".bd")) {
+			file += ".bd";
+		}
 		var request = new XMLHttpRequest();
 		request.onreadystatechange = function() {
 			if (request.readyState == 4) {
@@ -56,7 +59,7 @@ var bdReader = (function() {
 	function includes(e, loaded) {
 		// FIXME 1 list per link (path downwards to avoid loops)
 		// FIXME a map of already loaded files to their markup
-		var links = e.getElementsByClassName('bd-include');
+		var links = e.getElementsByClassName('bd-part');
 		if (!links) { return; }
 		for (var i = 0; i < links.length; i++) {
 			include(links[i], loaded);

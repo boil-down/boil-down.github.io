@@ -49,14 +49,17 @@ var bd = (function() {
 		[" <s>$1</s> ",          / -([^- \t].*?[^- \t])- /g ],
 		[" <def>$1</def> ",      / :([^: \t].*?[^: \t]): /g ],		
 		["<span style='color: $2$3;'>$1</span>", /::([^:].*?)::\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
-		["<a href=\"$1\" class='bd-include'>$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}) (.+?)\]\]\*/g ],
-		["<a href=\"$1\">$2</a>", /\[\[((?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}) (.+?)\]\]/g ],
-		["$1<a href=\"$2$3\">$3</a>", /(^|[^=">])(https?:\/\/|www\.)((?:[-\w]{0,15}[.\/#+?=&]?){1,20})/g ],
-		["<a href=\"#sec-$1\">$1</a>", /\[\[(\d+(?:\.\d+)*)\]\]/g ],
-		["<sup><a href='#fnote$1'>$1</a></sup>", /\^\[(\d+)\]/g ],
-		//TODO [[...]]* (a link that is meant as an include; support line slicing ala #L10-L14)
-		//TODO an addition to inline that is done last and matches the > of </tag> to alter it and add a user/comment to it (wrapper?)
+		["<a href=\"#sec-$1\">$1</a>", /\^\[((?:\d+|[A-Z])(?:\.\d+)*)\]/g ],
+		["<sup><a href='#REF-$1'>$1</a></sup>", /\^\[(\w+)\]/g ],
 	];
+		//TODO an addition to inline that is done last and matches the > of </tag> to alter it and add a user/comment to it (wrapper?)
+
+	const URL = /^((?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20})$/;
+
+	const LINKS = [ // inter document or external ones
+		[ "bd-page", /^(\w){2,}$/ ],
+		[ "bd-link", URL ],
+	]
 
 	const STYLES = [
 		// dynamic values
@@ -129,7 +132,7 @@ var bd = (function() {
 			if (i === before) { 
 				if (console && console.log) { console.log("endless loop at line "+i+": "+this.lines[i]); }
 				i++; // error recovery: go on on next line
-			} 
+			}
 		}
 	}
 
@@ -194,11 +197,9 @@ var bd = (function() {
 		var text = noTextIdStyle[2];
 		var id = noTextIdStyle[3] ? noTextIdStyle[3] : text2id(text);
 		var title = /^\s{5}$/.test(no);
-		if (/[A-Z0-9]/.test(no)) {
-			doc.add("\n<a id=\"sec-"+no.replace(")", "").trim()+"\"></a>");
-		}
+		var noa = /[A-Z0-9]/.test(no) ? "<a id=\"sec-"+no.replace(")", "").trim()+"\">"+no+"</a> ": "";
 		var n = title ? 1 : no ? no.split(/\./).length+1 : 2;
-		doc.add("\n<h"+n+" id=\""+id+"\" "+doc.styles(noTextIdStyle[4])+">"+processLine(text)+"</h"+n+">\t");
+		doc.add("\n<h"+n+" id=\""+id+"\" "+doc.styles(noTextIdStyle[4])+">"+noa+processLine(text)+"</h"+n+">\t");
 		return start+1;
 	}
 
@@ -436,6 +437,7 @@ var bd = (function() {
 	}
 
 	function processInline(line) {
+		line = line.replace(/\[\[([^ ]+)( [^\]]+)?\]\](\*)?/g, substLink);		
 		var plains = [];		
 		var stripped = "";
 		var start = 0;
@@ -453,19 +455,30 @@ var bd = (function() {
 			end=line.indexOf("{{", start);
 		}
 		stripped+=line.substring(start, line.length);
-		var html = substitute(stripped);
+		var html = substInline(stripped);
 		for (var i = 0; i < plains.length; i++) {
 			html=html.replace("!!"+i+"!!", plains[i]);
 		}
-		html=html.replace(/\$(\w+)\$/, substURLparam);
+		html=html.replace(/\$(\w+)\$/, substParam);
 		return html;
 	}
 
-	function substURLparam(markup, name) {
+	function substLink(link, url, text, alt) {
+		for (var i = 0; i < LINKS.length; i++) {
+			if (LINKS[i][1].test(url)) {
+				var cls = LINKS[i][0]+(alt ? " bd-part" : "")
+				text = text ? "}}"+text.trim()+"{{" : /(?:^|\/)\w+$/.test(url) ? url.substring(url.lastIndexOf('/')+1).replace(/_/g, " ") : url;
+				return "{{<a href=\""+url+"\" class=\""+cls+"\">"+text+"</a>}}";
+			}
+		}
+		return link;
+	}
+
+	function substParam(markup, name) {
 		return processLine(URLparam(name));
 	}
 
-	function substitute(line) {
+	function substInline(line) {
 		for (var i = 0; i < INLINE.length; i++) {
 			var lmax = INLINE[i].length > 2 ? INLINE[i][2] : 1;			
 			do {			

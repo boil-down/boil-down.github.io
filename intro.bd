@@ -3,11 +3,13 @@
 
 ***[a4][<=]
 
-                                   bd
+                                   Boildown
 
 
-Boildown a definite flexible /lightweight markup language/ 
-that is easy to read, write *and implement*.
+is a definite flexible 
+ [[https://en.wikipedia.org/wiki/Lightweight_markup_language]]
+that enables low complexity, low footprint implementations while maintaining a 
+concise and regular markup.
 
 1 Overview
 _{{_emphasis_}}_, *{{*strong emphasis*}}*, "{{"title"}}",
@@ -120,7 +122,7 @@ Using option `{...}` to set date of edit:
 
 6 Headings
 
- A line start starts with at least 3 spaces or tabs is a title:
+ A line start starts with at least 6 spaces or tabs is a title:
 ?       Title
 
 Parts, chapters and sections are numbered 
@@ -215,20 +217,26 @@ Separator lines are empty but proper blocks, styles can be used:
 
 9 Links
 
-Links are given in pairs of `[[_URL_ _label_]]`:
+Links are given in pairs of `[[` `_URL_ _label_` `]]`:
+? [[/relative/url]]
+
 ? [[/relative/url label]]
+
+? [[http://dilbert.com/]]
 
 ? [[http://dilbert.com/ dilbert]]
 
-Links without label are just given plain but they have to start with `http/s` or `www` to be auto-linked:
+? [[WikiPage]]
 
-? http://dilbert.com/
-? www.youtube.com
+? [[Wiki_Page]]
 
-Link creation can be escaped as usual:
+? [[A_Wiki_Page text]]
 
-? {{http://dilbert.com/}}
+Texts can use markup as usual:
 
+? [[WikiPage _text_]]
+
+? _[[WikiPage text]]_
 
 10 Includes
 

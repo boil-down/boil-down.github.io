@@ -110,6 +110,7 @@ p:first-child + * { margin-top: 0.6em; }
 body { padding: 0; margin: 0; }
 
 h1,h2,h3,h4,h5,h6 { clear: both; margin-top: 2em; }
+h1 a[id],h2 a[id],h3 a[id],h4 a[id],h5 a[id],h6 a[id] { display: none; }
 
 code { padding: 1px 5px; background-color: #F0F0F0; white-space: pre-wrap; }
 pre { padding: 5px; margin: 3px 0; line-height: 1.4em; background-color: #F0F0F0; }
@@ -125,6 +126,10 @@ def { font-weight: bold; font-style: italic; }
 hr { border-width: 0; background-color: #999; height: 1px; }
 blockquote { font-style: italic; display: table; text-align: left; margin: 0 auto; border-left: 2px solid #0074D9; padding-left: 5px; }
 footer { font-style: normal; }
+
+a[href ^= "http"]:after {
+     content: " " url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);    
+}
 
 caption.top { caption-side: top; }
 caption.bottom { caption-side: bottom; }
