@@ -227,12 +227,17 @@ Separator lines are empty but proper blocks, styles can be used:
 
 ? compare ^[FOO2016] for
 
-The footnote itself does not start with `^`:
+The footnote itself does not start with `^`, all following lines that are 
+indented by at least 2 spaces or tabs belong to the footnote:
 
 ? [FOO2016] refers 
 ?   to
 ?   1. a name
 ?   2. something else
+
+Footnotes are blocks and can have styles:
+
+? [BAR2] something [12pt]
 
 10 Links
 

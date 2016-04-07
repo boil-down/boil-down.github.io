@@ -16,7 +16,7 @@ var bd = (function() {
 		[ Sample,      /^\? / ],
 		[ List,        /^\* / ],
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
-		[ Footnote,    /^\s*\[(\w+)\]/ ],
+		[ Footnote,    /^\s*\[(\w+)\](.*?)((?:\[[^\]]+\])*)?$/ ],
 		[ Table,       /^([:\|]):?(.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?$/ ],
 		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}))\s+([-+ ,.\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
 		[ Heading,     /^([A-Z]\)?|(?:[\dIVX]+(?:\.\d+)*){1,6}|\s{5})\s\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
@@ -50,8 +50,8 @@ var bd = (function() {
 		[" <s>$1</s> ",          / -([^- \t].*?[^- \t])- /g ],
 		[" <def>$1</def> ",      / :([^: \t].*?[^: \t]): /g ],		
 		["<span style='color: $2$3;'>$1</span>", /::([^:].*?)::\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
-		["<a href=\"#sec-$1\" class='bd-ref'>$1</a>", /\^\[((?:\d+|[A-Z])(?:\.\d+)*)\]/g ],
-		["<sup><a href='#$1' class='bd-foot'>$1</a></sup>", /\^\[(\w+)\]/g ],
+		["<a href=\"#sec-$1\" class='bd-sref'>$1</a>", /\^\[((?:\d+|[A-Z])(?:\.\d+)*)\]/g ],
+		["<a href='#$1' class='bd-nref'>$1</a>", /\^\[(\w+)\]/g ],
 	];
 		//TODO an addition to inline that is done last and matches the > of </tag> to alter it and add a user/comment to it (wrapper?)
 
@@ -379,9 +379,9 @@ var bd = (function() {
 
 	function Footnote(doc, start, end, pattern) {
 		var note = pattern.exec(doc.line(start));
-		doc.add("<small class='note' id=\""+note[1]+"\"><dl><dt><def>"+note[1]+"</def></dt><dd>");
+		doc.add("<small id=\""+note[1]+"\" "+doc.styles(note[3], 'note')+"><dl><dt><def>"+note[1]+"</def></dt><dd>");
 		var i = doc.unindent(2, start+1, end, /^\s{2}/);
-		doc.lines[start] = doc.lines[start].substring(doc.lines[start].indexOf(']')+1);
+		doc.lines[start] = note[2];
 		doc.process(start, i);
 		doc.add("</dd></small>");
 	}
