@@ -113,7 +113,7 @@ var bd = (function() {
 
 	function URLparam(name) {
 		var url = new RegExp("[&?]"+name+"=([^&]+)").exec(window.location.search);
-		return url && url[1] ? decodeURIComponent(url[1]) : undefined;
+		return url && url[1] ? decodeURIComponent(url[1]) : "";
 	}
 
 	function processMarkup(markup, start, end) {
