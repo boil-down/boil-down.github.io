@@ -337,6 +337,17 @@ per level.
 ?     blocks as well
 ?     ```
 
+ A line starting with a definition starts a definition block:
+
+? :term:
+?   description
+? :another term:
+?   more description
+?   as usual indented
+? 
+? :last term:
+?   1. this
+?   2. that 
 
 13 Listings
 

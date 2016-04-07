@@ -14,6 +14,7 @@ var bd = (function() {
 		[ Listing,     /^~{3,}\*?(?:\{(\w+(?: \w+)*)\})?/ ],
 		[ Output,      /^! / ],
 		[ Sample,      /^\? / ],
+		[ Definition,  /^(:[^:]+:)\s*/ ],
 		[ List,        /^\* / ],
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
 		[ Footnote,    /^\s*\[(\w+)\](.*?)((?:\[[^\]]+\])*)?$/ ],
@@ -381,10 +382,23 @@ var bd = (function() {
 	function Footnote(doc, start, end, pattern) {
 		var note = pattern.exec(doc.line(start));
 		doc.add("<small id=\""+note[1]+"\" "+doc.styles(note[3], 'note')+"><dl><dt><def>"+note[1]+"</def></dt><dd>");
-		var i = doc.unindent(2, start+1, end, /^\s{2}/);
+		var i = doc.unindent(2, start+1, end, /^\s{2}|^\s?$/);
 		doc.lines[start] = note[2];
 		doc.process(start, i);
 		doc.add("</dd></small>");
+	}
+
+	function Definition(doc, start, end, pattern) {
+		var i = start;
+		doc.add("<dl>");
+		while (i < end && pattern.test(doc.line(i))) {
+			doc.add("<dt>"+processLine(" "+pattern.exec(doc.line(i))[1]+" ")+"</dt>\n<dd>");
+			var i0 = i+1;
+			i = doc.unindent(2, i0, end, /^\s{2}|^\s?$/);
+			doc.process(i0, i);
+			doc.add("</dd>");
+		}
+		doc.add("</dl>");
 	}
 
 	function List(doc, start, end, pattern) {
