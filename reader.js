@@ -1,6 +1,9 @@
 
 var bdReader = (function() {
 
+	var opened = {};
+	var inTransit = {};
+
 	return {
 		load: load,
 		open: open
@@ -10,13 +13,30 @@ var bdReader = (function() {
 		if (!file.endsWith(".bd")) {
 			file += ".bd";
 		}
+		var markup = opened[file];
+		if (markup) {
+			onSuccess(markup);
+			return;
+		}
+		var transit = inTransit[file];
+		if (transit) {
+			transit.push({"onSuccess": onSuccess, "onError": onError});
+			return;
+		}
+		transit = [];
+		transit.push({"onSuccess": onSuccess, "onError": onError});
+		inTransit[file] = transit;
 		var request = new XMLHttpRequest();
 		request.onreadystatechange = function() {
 			if (request.readyState == 4) {
 				if (request.status == 200) {
-					onSuccess(request.responseText);
+					for (var i = 0; i < transit.length; i++) {
+						transit[i].onSuccess(request.responseText);
+					}
 				} else if (onError) {
-					onError(request.status);
+					for (var i = 0; i < transit.length; i++) {
+						transit[i].onError(request.status);
+					}
 				}
 			}
 		};
@@ -33,8 +53,6 @@ var bdReader = (function() {
 	// }
 	function open(config) {
 		var url = config.url;
-		var loaded = [];
-		loaded.push(url);
 		load(url, function(markup) {
 			if (config.markupId) {
 				document.getElementById(config.markupId).innerHTML=markup;
@@ -43,7 +61,7 @@ var bdReader = (function() {
 				var doc = document.getElementById(config.docId);
 				doc.innerHTML=bd.toHTML(markup);
 				if (config.includes) {
-					includes(doc, loaded);
+					includes(doc, []);
 				}
 			}
 			if (window.location.hash) {
@@ -56,31 +74,32 @@ var bdReader = (function() {
 		});
 	}
 
-	function includes(e, loaded) {
 		// FIXME 1 list per link (path downwards to avoid loops)
 		// FIXME a map of already loaded files to their markup
+	function includes(e, loaded) {
 		var links = e.getElementsByClassName('bd-part');
-		if (!links) { return; }
+		if (!links) 
+			return;
 		for (var i = 0; i < links.length; i++) {
-			include(links[i], loaded);
+			include(links[i], loaded.slice(0));
 		}
 	}
 
 	function include(a, loaded) {
+		if (a.hostname !== window.location.hostname || loaded.indexOf(a.href) >= 0)
+			return; // no cross domain includes
 		var url = a.href;
+		loaded.push(url);
 		var range = /#L(\d+)-L(\d+)/.exec(url);
-		if (loaded.indexOf(url) < 0) {
-			loaded.push(url);
-			url = range ? url.substring(0, url.indexOf('#')) : url;
-			load(url, function(markup) {
-				var include = document.createElement("span");
-				include.innerHTML = range 
-					? bd.toHTML(markup, parseInt(range[1]), parseInt(range[2])) 
-					: bd.toHTML(markup);
-				a.parentNode.replaceChild(include, a);
-				includes(include, loaded);
-			});
-		}
+		url = range ? url.substring(0, url.indexOf('#')) : url;
+		load(url, function(markup) {
+			var include = document.createElement("span");
+			include.innerHTML = range 
+				? bd.toHTML(markup, parseInt(range[1]), parseInt(range[2])) 
+				: bd.toHTML(markup);
+			a.parentNode.replaceChild(include, a);
+			includes(include, loaded);
+		});
 	}
 
 })();

@@ -1,7 +1,7 @@
 % v:beta
 % author: Jan Bernitt
 
-***[a4][<=]
+***[a4 rfc]
 
                                    Boildown
 
@@ -214,8 +214,27 @@ Separator lines are empty but proper blocks, styles can be used:
 
 ?  -------------[40%][<=][#000000]
 
+9 References
+ A reference to a heading uses `^[_REF_]`:
 
-9 Links
+? See chapter ^[2]
+
+? See part ^[I]
+
+? See section ^[I.1.1]
+
+ Footnotes are named with letters and digits `^[_NAME_]`:
+
+? compare ^[FOO2016] for
+
+The footnote itself does not start with `^`:
+
+? [FOO2016] refers 
+?   to
+?   1. a name
+?   2. something else
+
+10 Links
 
 Links are given in pairs of `[[` `_URL_ _label_` `]]`:
 ? [[/relative/url]]
@@ -238,7 +257,7 @@ Texts can use markup as usual:
 
 ? _[[WikiPage text]]_
 
-10 Includes
+11 Includes
 
 Includes are just links with a hint for a reader that the target is meant to
 be included in the document at the link position. 
@@ -252,10 +271,14 @@ Includes can also be done for a range of lines `_{file}_#L_{from}_-_L{to}_`:
 
 ? [[part.bd#L2-L3 range include]]*
 
+However, includes are not allowed cross domain:
+
+? [[http://example.com/part.bd]]*
+
 TODO includes by heading section range (I-V)  
 
 
-11 Lists
+12 Lists
 
 Ordered lists start at the number of the first item given.
 The number or letter has to followed by a dot and a space `n. `:
@@ -310,7 +333,7 @@ per level.
 ?     ```
 
 
-12 Listings
+13 Listings
 
 ? ```
 ? 1 * 2 * 3 = 6
@@ -335,7 +358,7 @@ Give samples
 ? ~~~
 
 
-13 Images
+14 Images
 
 Images are given in format `( _URL_ _[title]_ )`:
 ? ( bee.png a bee )
@@ -354,7 +377,7 @@ If the caption isn't stated first, the caption goes below the images:
 ? (( a *bee* ))
 
 
-14 Tables
+15 Tables
 
 ? :: green colors ::['][<=>]
 ? :.........:[#4CAF50]
@@ -395,7 +418,7 @@ If the caption isn't stated first, the caption goes below the images:
 ? :.........:
 
 
-15 Minipages
+16 Minipages
 
 ? ***{aside}[<>][bc-yellow]
 ? ****[50%][bc-red][<=]
@@ -411,7 +434,7 @@ As blocks cope with missing end marks one can start a document with a minipage
 that is never closed to apply some _global_ options.
 
 
-16 Documentation
+17 Documentation
 
 ? ? _shows_ an example
 

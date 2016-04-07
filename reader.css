@@ -1,9 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Ubuntu:400,400italic,700,700italic);
 
 /* paper formats */
-.a4 { max-width: 21cm; padding: 0 3cm; margin: 0 auto; box-sizing: border-box; }
-.a5 { max-width: 14.8cm; padding: 0 2cm; margin: 0 auto; box-sizing: border-box; }
-.a6 {  max-width: 10.5cm; padding: 0 1.5cm; margin: 0 auto; box-sizing: border-box; }
+.a4 { max-width: 21cm; padding: 0 3cm; margin: 0 auto 0 0; box-sizing: border-box; }
+.a5 { max-width: 14.8cm; padding: 0 2cm; margin: 0 auto 0 0; box-sizing: border-box; }
+.a6 {  max-width: 10.5cm; padding: 0 1.5cm; margin: 0 auto 0 0; box-sizing: border-box; }
 
 /* viewport types */
 .scroll { min-height: 100%; }
@@ -12,6 +12,8 @@
 .page > div { max-width: 40em; margin: 0 auto; padding: 1cm 0; }
 .screen { height: 100%; }
 .screen > div { width: 800px; position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.rfc > div > h2, .rfc > div > h3, .rfc > div > h4, .rfc > div > h5, .rfc > div > h6 { margin-left: -25px; }
+.rfc > div > h1 { text-align: center; margin-left: -25px; }
 
 
 /* fonts */
@@ -99,18 +101,23 @@
 .spelling { display: inline-block; border-bottom: 1px dashed #FF4136; text-decoration: none; }
 .grammar  { display: inline-block; border-bottom: 1px dashed #0074D9; text-decoration: none; }
 
+/* footnote refs */
+body { counter-reset: footnote; }
+.bd-foot:before { counter-increment: footnote; content: counter(footnote) ")"; font-size: 0.8rem; }
+.bd-foot { font-size: 0; text-decoration: none; }
+
 /* margins + paddings */
 .cp-2 td, .cp-2 th { padding: 2em 0 !important; }
 
 p { margin: 0; padding: 0; line-height: 1.5; }
 p + p, * + p { margin: 0.6em 0 0.4em 0; padding: 0; }
 p:first-child + * { margin-top: 0.6em; }
+.note p, .note ol, .note ul { margin: 0; }
 
 /* basic reset */
 body { padding: 0; margin: 0; }
 
-h1,h2,h3,h4,h5,h6 { clear: both; margin-top: 2em; }
-h1 a[id],h2 a[id],h3 a[id],h4 a[id],h5 a[id],h6 a[id] { display: none; }
+h1,h2,h3,h4,h5,h6 { clear: both; margin-top: 2.5em; }
 
 code { padding: 1px 5px; background-color: #F0F0F0; white-space: pre-wrap; }
 pre { padding: 5px; margin: 3px 0; line-height: 1.4em; background-color: #F0F0F0; }

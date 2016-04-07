@@ -16,6 +16,7 @@ var bd = (function() {
 		[ Sample,      /^\? / ],
 		[ List,        /^\* / ],
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
+		[ Footnote,    /^\s*\[(\w+)\]/ ],
 		[ Table,       /^([:\|]):?(.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?$/ ],
 		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}))\s+([-+ ,.\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
 		[ Heading,     /^([A-Z]\)?|(?:[\dIVX]+(?:\.\d+)*){1,6}|\s{5})\s\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
@@ -49,8 +50,8 @@ var bd = (function() {
 		[" <s>$1</s> ",          / -([^- \t].*?[^- \t])- /g ],
 		[" <def>$1</def> ",      / :([^: \t].*?[^: \t]): /g ],		
 		["<span style='color: $2$3;'>$1</span>", /::([^:].*?)::\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
-		["<a href=\"#sec-$1\">$1</a>", /\^\[((?:\d+|[A-Z])(?:\.\d+)*)\]/g ],
-		["<sup><a href='#REF-$1'>$1</a></sup>", /\^\[(\w+)\]/g ],
+		["<a href=\"#sec-$1\" class='bd-ref'>$1</a>", /\^\[((?:\d+|[A-Z])(?:\.\d+)*)\]/g ],
+		["<sup><a href='#$1' class='bd-foot'>$1</a></sup>", /\^\[(\w+)\]/g ],
 	];
 		//TODO an addition to inline that is done last and matches the > of </tag> to alter it and add a user/comment to it (wrapper?)
 
@@ -197,7 +198,7 @@ var bd = (function() {
 		var text = noTextIdStyle[2];
 		var id = noTextIdStyle[3] ? noTextIdStyle[3] : text2id(text);
 		var title = /^\s{5}$/.test(no);
-		var noa = /[A-Z0-9]/.test(no) ? "<a id=\"sec-"+no.replace(")", "").trim()+"\">"+no+"</a> ": "";
+		var noa = /[A-Z0-9]/.test(no) ? "<a id=\"sec-"+no.replace(")", "").trim()+"\"></a> ": "";
 		var n = title ? 1 : no ? no.split(/\./).length+1 : 2;
 		doc.add("\n<h"+n+" id=\""+id+"\" "+doc.styles(noTextIdStyle[4])+">"+noa+processLine(text)+"</h"+n+">\t");
 		return start+1;
@@ -376,6 +377,15 @@ var bd = (function() {
 		return i;
 	}
 
+	function Footnote(doc, start, end, pattern) {
+		var note = pattern.exec(doc.line(start));
+		doc.add("<small class='note' id=\""+note[1]+"\"><dl><dt><def>"+note[1]+"</def></dt><dd>");
+		var i = doc.unindent(2, start+1, end, /^\s{2}/);
+		doc.lines[start] = doc.lines[start].substring(doc.lines[start].indexOf(']')+1);
+		doc.process(start, i);
+		doc.add("</dd></small>");
+	}
+
 	function List(doc, start, end, pattern) {
 		var i = start;		
 		var bullet = pattern.test("* ");
@@ -412,7 +422,7 @@ var bd = (function() {
 
 	function styles(line, classes) {
 		classes = classes ? classes : "";
-		line = line ? line : "";
+		line = line ? line.replace(/\$(\w+)\$/, substParam) : "";
 		var styles = "";
 		var start = line.indexOf('[');
 		while (start >= 0) {
@@ -433,7 +443,7 @@ var bd = (function() {
 	}
 
 	function processLine(line) {
-		return processInline(escapeHTML(line));
+		return processInline(escapeHTML(line.replace(/\$(\w+)\$/, substParam)));
 	}
 
 	function processInline(line) {
@@ -459,7 +469,6 @@ var bd = (function() {
 		for (var i = 0; i < plains.length; i++) {
 			html=html.replace("!!"+i+"!!", plains[i]);
 		}
-		html=html.replace(/\$(\w+)\$/, substParam);
 		return html;
 	}
 
