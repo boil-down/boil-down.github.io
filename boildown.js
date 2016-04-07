@@ -42,6 +42,7 @@ var bd = (function() {
 		["<tt>$1</tt>",          /``(..*?)``/g ],
 		["<span style='font-variant:small-caps;'>$1</span>", /==(..*?)==/g ],
 		["<span style='text-decoration: underline;'>$1</span>", /__(..*?)__/g ],
+		["<kbd class='single'>$1</kbd>", /@(.)@/g ],
 		["<kbd>$1</kbd>",        /@(..*?)@/g ],
 		["<code>$1</code>",      /`(..*?)`/g ],
 		["<strong>$1</strong>",  /\*(..*?)\*/g ],

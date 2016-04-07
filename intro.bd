@@ -35,7 +35,7 @@ Semantic markups use single character marks:
 
 ? `code`, ```
 
-? @user input@, @@@
+? @Alt@, @@@, @T@
 
 ...one or more when nesting makes sense...
 
