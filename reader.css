@@ -1,3 +1,5 @@
+/* TODO make all rules just apply within the document (target element has a .doc class) */
+
 /* paper formats */
 .a4 { max-width: 21cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
 .a5 { max-width: 14.8cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
@@ -143,6 +145,9 @@ caption.bottom { caption-side: bottom; }
 
 pre.source { white-space: pre-wrap; margin: 0; }
 pre.source span { color: #ccc; }
+
+.output h1, .output h2, .output h3, .output h4, .output h5, .output h6 { margin-top: 0.3em; }
+.output { border-left: 5px solid #ccc; padding-left: 10px; }
 
 table.describe, table.example { width: 100%; border-spacing: 5px 0; }
 table.describe td { width: 50%; vertical-align: top; }

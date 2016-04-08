@@ -239,6 +239,14 @@ Footnotes are blocks and can have styles:
 
 ? [BAR2] something [12pt]
 
+TODO make notes usable for user comments etc. by allowing for an option (user)
+`[TODO]{Jan} add this feature...`
+When an option is used the name is not an ID but a class and a member of a collection of those.
+Also it is member in the list of elements associated with the user (option)
+This gives quite reusable blocks (maybe they should use aside in case with user)
+for all kinds of annotations.
+
+
 10 Links
 
 Links are given in pairs of `[[` `_URL_ _label_` `]]`:
