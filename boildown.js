@@ -108,6 +108,7 @@ var bd = (function() {
 
 	return {
 		toHTML: processMarkup,
+		toDoc: function (markup) { return new Doc(markup); },
 		URLparam: URLparam
 	};
 

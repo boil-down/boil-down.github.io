@@ -74,8 +74,6 @@ var bdReader = (function() {
 		});
 	}
 
-		// FIXME 1 list per link (path downwards to avoid loops)
-		// FIXME a map of already loaded files to their markup
 	function includes(e, loaded) {
 		var links = e.getElementsByClassName('bd-part');
 		if (!links) 
@@ -90,16 +88,29 @@ var bdReader = (function() {
 			return; // no cross domain includes
 		var url = a.href;
 		loaded.push(url);
-		var range = /#L(\d+)-L(\d+)/.exec(url);
-		url = range ? url.substring(0, url.indexOf('#')) : url;
-		load(url, function(markup) {
-			var include = document.createElement("span");
-			include.innerHTML = range 
-				? bd.toHTML(markup, parseInt(range[1]), parseInt(range[2])) 
-				: bd.toHTML(markup);
+		var file = url.lastIndexOf('#') < 0 ? url : url.substring(0, url.lastIndexOf('#'));
+		load(file, function(markup) {
+			var include = document.createElement("div");
+			include.innerHTML = extract(url, markup); 
 			a.parentNode.replaceChild(include, a);
 			includes(include, loaded);
 		});
+	}
+	
+	function extract(url, markup) {
+		var range = /#L(\d+)-L(\d+)/.exec(url);
+		if (range) {
+			return bd.toHTML(markup, parseInt(range[1]), parseInt(range[2]));
+		}
+		range = /#S([\w.]+)-S([\w.]+)/.exec(url);
+		if (range) {
+			var doc = bd.toDoc(markup);
+			var s = doc.scan(0, doc.lines.length, new RegExp("^"+range[1].replace(".", "\\.")));
+			var e = doc.scan(s+1, doc.lines.length, new RegExp("^"+range[2].replace(".", "\\.")));
+			doc.process(s,e);			
+			return doc.html;
+		}
+		return bd.toHTML(markup);
 	}
 
 })();

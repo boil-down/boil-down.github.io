@@ -1,0 +1,10 @@
+
+						Dummy
+
+I Part 1
+
+I.1 Chapter 1 
+This chapter is included from another file using range of sections.
+
+I.2 Chapter 2
+This chapter is not included as the range ends at chapter 2.

@@ -262,6 +262,7 @@ Texts can use markup as usual:
 
 ? _[[WikiPage text]]_
 
+
 11 Includes
 
 Includes are just links with a hint for a reader that the target is meant to
@@ -280,7 +281,9 @@ However, includes are not allowed cross domain:
 
 ? [[http://example.com/part.bd]]*
 
-TODO includes by heading section range (I-V)  
+Heading numbers can also be used as range:
+
+? [[dummy.bd#SI.1-SI.2]]*
 
 
 12 Lists

@@ -1,7 +1,7 @@
 /* paper formats */
-.a4 { max-width: 21cm; padding: 0 3cm; margin: 0 auto 0 0; box-sizing: border-box; }
-.a5 { max-width: 14.8cm; padding: 0 2cm; margin: 0 auto 0 0; box-sizing: border-box; }
-.a6 {  max-width: 10.5cm; padding: 0 1.5cm; margin: 0 auto 0 0; box-sizing: border-box; }
+.a4 { max-width: 21cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
+.a5 { max-width: 14.8cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
+.a6 {  max-width: 10.5cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
 
 /* viewport types */
 .scroll { min-height: 100%; }
