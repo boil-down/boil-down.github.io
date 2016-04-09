@@ -12,13 +12,14 @@ that enables low complexity, low footprint implementations while maintaining a
 concise and regular markup.
 
 1 Overview
+
 _{{_emphasis_}}_, *{{*strong emphasis*}}*, "{{"title"}}",
  /{{/alternative voice/}}/ , -{{-inaccurate text-}}- , :{{:term:}}: 
 
 
 2 Text Formatting
 
-Semantic markups use single character marks:
+Semantic markup uses single character marks:
 ? _emphasis_
 
 ? *strong emphasis*
@@ -30,8 +31,6 @@ Semantic markups use single character marks:
 ?  -inaccurate text- 
 
 ?  :term: 
-
-? !annotated!{bc-info}
 
 ? `code`, ```
 
@@ -51,38 +50,43 @@ Semantic markups use single character marks:
 ? a '' 'quote' within a quote'',
 ? a ' ''quote'' within a quote'
 
-Stylistic markups use two character marks:
+Stylistic markup uses two character marks:
 ? ``monospace``
 
 ? ==small caps==
 
 ? __underlined__
 
+
+3 Text Highlighting
+
+Colors are stylistic (two characters marks) `*::*_text_*::{*_color_*}*`:
 ? ::coloured::{orange}
 ? ::coloured::{#7FDBFF}
 
+Annotations are semantic (one character marks) `*!*_text_*!{*_semantic_*}*`:
+ A numeric annotation indicates a label:
+? !label-1!{1}
+? !label-2!{2}
+? !label-3!{3}
+? !label-4!{4}
 
-3 Inline Escaping
-
-Text in-between double curly brackets `{{{{}}`...`{{}}}}` is not interpreted. 
-? {{*plain* _text_}}
-
-Escaped sections can be contained within inline elements.
-? `{{*plain* _text_}}`
-? *plain {{_text_}}*
+? !label-5!{5}
+? !label-6!{6}
+? !label-7!{7}
+? !label-8!{8}
+? !label-9!{9}
+? !label-10!{10}
+? !label-11!{11}
+? !label-12!{12}
+? !label-13!{13}
+? !label-14!{14}
+? !label-15!{15}
+? !label-16!{16}
+? !label-17!{17}
 
 
 4 Special Characters
- 
-Manual line breaks are forced using `\\`:
-? manual line \\ break
-Otherwise new paragraphs start after blank lines or within a new block.
-
-For manual page break a anterisk `*` is added to a usual line break:
-? manual page \\* break
-
-Line breaks opportunities can be marked using `\-`:
-? along\-word\-that\-might\-break\-somewhere
 
 Special punctuation marks:
 ? ...
@@ -95,29 +99,17 @@ HTML-entities can be used by name:
 ? &loz;
 
 
-5 Editing
-  Inline...
-? --deleted text--
+5 Page Layout
+ 
+Manual line breaks are forced using `*\\*`:
+? manual line \\ break
+Otherwise new paragraphs start after blank lines or within a new block.
 
-? ++added text++
+For manual page break a anterisk is added `*{{\\*}}*`:
+? manual page \\* break
 
-? !wrong text!{spelling}
-? !wrong text!{grammar}
-
-  Blocks...
-? ---
-? deleted block
-? ---
-
-? +++
-? added block
-? +++
-
-Using option `{...}` to set date of edit:
-
-? +++{2016-04-01}
-? Added 1.of April
-? +++
+Line breaks opportunities can be marked using `*\-*`:
+? along\-word\-that\-might\-break\-somewhere
 
 
 6 Headings
@@ -139,18 +131,18 @@ Or when using parts:
 
 The section numbers become anchors.
 
-An appendix can used upper case letters that might be followed by a `)` but
+An appendix can used upper case letters that might be followed by a `*)*` but
 must be followed by a space afterwards.
 ? A) Appendix A
 
- A unnumbered index like a bibliography can use `_` followed by a space:
+ A unnumbered index like a bibliography can use `*_*` followed by a space:
 ? _ Bibliography
 ? _____ Bibliography _____
 
 Single word headings with just letters and digits can also be used bare
 ? Bibliography
 
-To specify the name of a headings anchor use `{_..._}`:
+To specify the name of a headings anchor use `*{*_name_*}*`:
 ? 1.1 Heading {anchorname}
 
 Headings are usual block elements to options can be used:
@@ -160,13 +152,14 @@ Headings are usual block elements to options can be used:
 
 7 Quoting
 
-Simple block quotes start with `> ` (space!): 
+Simple block quotes start with `*> *` (space!): 
 ? > a quote using
 ? > multiple lines
 
 ? > > double quoting...
 
-Advanced block quotes `>>>` can be used with options, e.g. to preserve line wrapping:
+Three or more right arrows `*>>>*` start a advanced quote block where options 
+can be used, e.g. to preserve line wrapping:
 ? >>>[\\]
 ? a quote using
 ? multiple lines
@@ -174,7 +167,7 @@ Advanced block quotes `>>>` can be used with options, e.g. to preserve line wrap
 ? source
 ? >>>
 
-Using option to specify citation:
+Citation is defined by the option `*{*_source_*}*`:
 ? >>>{Me}
 ? Simple new stupidity
 ? >>>
@@ -197,7 +190,7 @@ Using minipages to position a cite footer.
 
 8 Separator Lines
 
-Any line that does start with whitespace and that just contains whitespace and 
+Any line that does start with whitespace and just contains whitespace and 
 at least 3 minus, plus or asterisks symbols is a separator line.
 
 ?      --------------
@@ -214,42 +207,22 @@ Separator lines are empty but proper blocks, styles can be used:
 
 ?  -------------[40%][<=][#000000]
 
-9 References
- A reference to a heading uses `^[_REF_]`:
 
-? See chapter ^[2]
+9 Escaping
 
-? See part ^[I]
+Text in-between double curly brackets `*{{{{}}*_text_*{{}}}}*` is not interpreted. 
+? {{*plain* _text_}}
 
-? See section ^[I.1.1]
+Escaped sections can be contained within inline elements.
+? `{{*plain* _text_}}`
+? *plain {{_text_}}*
 
- Footnotes are named with letters and digits `^[_NAME_]`:
-
-? compare ^[FOO2016] for
-
-The footnote itself does not start with `^`, all following lines that are 
-indented by at least 2 spaces or tabs belong to the footnote:
-
-? [FOO2016] refers 
-?   to
-?   1. a name
-?   2. something else
-
-Footnotes are blocks and can have styles:
-
-? [BAR2] something [12pt]
-
-TODO make notes usable for user comments etc. by allowing for an option (user)
-`[TODO]{Jan} add this feature...`
-When an option is used the name is not an ID but a class and a member of a collection of those.
-Also it is member in the list of elements associated with the user (option)
-This gives quite reusable blocks (maybe they should use aside in case with user)
-for all kinds of annotations.
+To escape from blocks just indent the line by an additional space or tab.
 
 
 10 Links
 
-Links are given in pairs of `[[` `_URL_ _label_` `]]`:
+Links refer to other documents and are given as a pairs of `*[[*_url_ [_label_]*]]*`:
 ? [[/relative/url]]
 
 ? [[/relative/url label]]
@@ -271,38 +244,56 @@ Texts can use markup as usual:
 ? _[[WikiPage text]]_
 
 
-11 Includes
+11 References
 
-Includes are just links with a hint for a reader that the target is meant to
-be included in the document at the link position. 
-The hint is done by adding an extra asterix `*` after the link:
+References are links to other sections within the same document.
 
-? [[part.bd an include]]*
+ A reference to a heading uses `*^[*_ref_*]*`:
 
-If a client does not include the link's target the link just has an extra class `bd-include`.
+? See chapter ^[2]
 
-Includes can also be done for a range of lines `_{file}_#L_{from}_-_L{to}_`:
+? See part ^[I]
 
-? [[part.bd#L2-L3 range include]]*
+? See section ^[I.1.1]
 
-However, includes are not allowed cross domain:
+ Other notes, like footnotes, are named with letters and digits `*^[*_name_*]*`:
 
-? [[http://example.com/part.bd]]*
-
-Heading numbers can also be used as range:
-
-? [[dummy.bd#SI.1-SI.2]]*
+? compare ^[FOO2016] ...
 
 
-12 Lists
+12 Notes
+
+Notes are annotation blocks with the format `*[*_name_*]*`.
+All following lines that are indented by at least 2 spaces or tabs belong to the footnote.
+The most common note is a footnote. 
+
+? [FOO2016] refers 
+?   to
+?   1. a name
+?   2. something else
+
+Notes are blocks and can have styles:
+
+? [BAR2] something [`]
+
+
+Note annotated with an editor `*{*_editor_*}*` are general notes (not footnotes). 
+The name given than refers to a type like _Info_:
+? [Info]:{Jan} explain notes
+
+If the editor is unimportant an asterix `*[*_name_*{{]*}}*` can be used for general notes:
+? [Obsolete]* \\ This is no longer valid...
+
+
+13 Lists
 
 Ordered lists start at the number of the first item given.
-The number or letter has to followed by a dot and a space `n. `:
+The number or letter has to followed by a dot and a space `_n_*. *`:
 ? 10. one
 ? #. two
 ? 4. three
 
-`#` can be used instead of an actual number or letter:
+`*#*` can be used instead of an actual number or letter:
 ? #. one
 ? #. two
 
@@ -315,16 +306,16 @@ Or upper-case letters:
 ? A. Alpha
 ? #. Beta
 
-And even roman numbers work, but here the lists have to start with `I.`
+And even roman numbers work, but here the lists have to start with `*I.*`
 
 ? I. one
 ? #. two
 ? #. three
 
 In case of letters a specified item cannot have multiple letters. 
-Instead the placeholder `#.` should be used.
+Instead the placeholder `*#.*` should be used.
 
-Asterisk `*` followed by a space are used for bullet lists.
+Asterisk `*{{*}}*` followed by a space are used for bullet lists.
 
 ? * one
 ? * other
@@ -360,40 +351,45 @@ per level.
 ?   1. this
 ?   2. that 
 
-13 Listings
 
+14 Listings
+
+Three or more backticks `*{{```}}*` start a code listing:
 ? ```
 ? 1 * 2 * 3 = 6
 ? ```
 
-Highlight lines...
+An aseterix `*{{*}}*` indicates the advanced listing where highlighting is 
+indicated 
+* with `*!*` to highlight the whole line
+* with any other character to give the character that marks sections to highlight (same character starts end ends)
 ? ```*
 ? ! 1 * 2 * 3 = 6
 ? x 1 + 2 + 3 = x6x
 ? ```
 
-Draw attention to keywords using the option `{_wordlist_}`:
+Options are used to give a list of keywords `*{*_wordlist_*}*`:
 ? ```{key word}
 ? Highlights the key words
 ? word by word
 ? ```
 
-Give samples
+Three or more tilda `*{{~~~}}*` start listings that are samples:
 ? ~~~
 ? A sample 
 ? block
 ? ~~~
 
 
-14 Images
+15 Images
 
-Images are given in format `( _URL_ _[title]_ )`:
+Images are given in format `*( *_url_ [_title_]* )*`:
 ? ( bee.png a bee )
 
-They are blocks with [[#options options]], here to make image float right:
+Images are blocks with [[#options options]], here to make the image float right:
 ? ( bee.png a bee )[=>]
 
- A gallery or _figure_ is done by a sequence of images, the caption `((`...`))` is optional.
+ A gallery or _figure_ is done by a sequence of images, the caption `*((*_caption_*))*` is optional.
 ? (( bees        ))[<>]
 ? ( bee.png bee 1 )
 ? ( bee.png bee 2 )
@@ -404,7 +400,7 @@ If the caption isn't stated first, the caption goes below the images:
 ? (( a *bee* ))
 
 
-15 Tables
+16 Tables
 
 ? :: green colors ::['][<=>]
 ? :.........:[#4CAF50]
@@ -445,13 +441,61 @@ If the caption isn't stated first, the caption goes below the images:
 ? :.........:
 
 
-16 Minipages
+17 Editing
+  Inline...
+? --deleted text--
 
-? ***{aside}[<>][bc-yellow]
-? ****[50%][bc-red][<=]
+? ++added text++
+
+? !wrong text!{spelling}
+? !wrong text!{grammar}
+
+  Blocks...
+? ---
+? deleted block
+? ---
+
+? +++
+? added block
+? +++
+
+Options are used to set thedate of an edit `*{*_date_*}*`:
+
+? +++{2016-04-01}
+? Added 1.of April
+? +++
+
+
+18 Includes
+
+Includes are just links with a hint for a reader that the target is meant to
+be included in the document at the link position. 
+The hint is done by adding an extra asterix `*{{[[}}*_url_*{{]]*}}*` after the link:
+
+? [[part.bd an include]]*
+
+If a client does not include the link's target the link just has an extra class `bd-include`.
+
+Includes can also be done for a range of lines `*{{[[}}*_file_*#L*_from_*-L*_to_*{{]]}}*`:
+
+? [[part.bd#L2-L3 range include]]*
+
+Includes can also target content between two headings `*{{[[}}*_file_*#S*_from_*-S*_to_*{{]]}}*`:
+
+? [[dummy.bd#SI.1-SI.2]]*
+
+However, includes are not allowed cross domain:
+
+? [[http://example.com/part.bd]]*
+
+
+19 Minipages
+
+? ***{aside}[bc--blue bw-2]
+? ****[50%][bc--red bw-2][<=]
 ? another page within a page
 ? ****
-? ****[50%][bc-orange][=>]
+? ****[50%][bc--green bw-2][=>]
 ? and another one besides
 ? ****
 ? and back in the outer minipage
@@ -461,7 +505,36 @@ As blocks cope with missing end marks one can start a document with a minipage
 that is never closed to apply some _global_ options.
 
 
-17 Documentation
+20 Templates
+Templates have two parts:
+1. The template (uses `*$*_n_` for placeholders)
+2. Data rows (values spearated by `*;*`)
+
+ A simple template for a list would look like this:
+? ==============
+? #. *$1*: _$2_
+? ==============
+? Foo; Bar
+? Baz; Que
+? ==============
+
+ A table needs static parts before each data row
+
+? ==========
+? = :...........:
+? = : X         :*
+? = : Y         :*
+? :...........:
+? : $1 :
+? : $2 :
+? = :...........:
+? ==========
+? Foo; Bar
+? Baz; Que
+? ==========
+
+
+21 Documentation
 
 ? ? _shows_ an example
 

@@ -8,17 +8,18 @@ var bd = (function() {
 		[ Edit,        /^\+{3}(?:\{([-\d]+)\})?/ ],
 		[ Edit,        /^-{3}(?:\{([-\d]+)\})?/ ],
 		[ Blockquote,  /^>{3,}(?:\{([ \w\.#]+)\})?/ ],
-		[ Blockquote2, /^> / ],
 		[ Minipage,    /^(\*{3,})(?:\{(\w+)\})?/ ],
 		[ Listing,     /^`{3,}\*?(?:\{(\w+(?: \w+)*)\})?/ ],
 		[ Listing,     /^~{3,}\*?(?:\{(\w+(?: \w+)*)\})?/ ],
+		[ Template,    /^={3,}/ ],
+		[ Blockquote2, /^> / ],
 		[ Output,      /^! / ],
 		[ Sample,      /^\? / ],
-		[ Definition,  /^(:[^:]+:)\s*/ ],
 		[ List,        /^\* / ],
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
-		[ Footnote,    /^\s*\[(\w+)\](.*?)((?:\[[^\]]+\])*)?$/ ],
-		[ Table,       /^([:\|]):?(.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?$/ ],
+		[ Note,        /^\s*\[(\w+)\](:)?(\*?)(?:\{([-\w.]+)\})?(.*?)((?:\[[^\]]+\])*)?$/ ],
+		[ Table,       /^([:\|])[:. ](.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?$/ ],
+		[ Definition,  /^(:[^:]+:)\s*/ ],
 		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}))\s+([-+ ,.\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?$/ ],
 		[ Heading,     /^([A-Z]\)?|(?:[\dIVX]+(?:\.\d+)*){1,6}|\s{5})\s\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
 		[ Heading,     /^(_+ )?([A-Z][\w]+)[\s_]*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
@@ -39,6 +40,7 @@ var bd = (function() {
 		["<sup>$2</sup>$3",      /(\^{1,})(.*?[^\^])\1($|[^\^])/g, 5 ],
 		["<del>$1</del>",        /--(..*?)--/g ],
 		["<ins>$1</ins>",        /\+\+(..*?)\+\+/g ],
+		["<u class='label-$2'>$1</u>", /!(..*?)!\{(\d\d?)\}/g ],
 		["<u class='$2'>$1</u>", /!(..*?)!\{([-a-z]+)\}/g ],
 		["<tt>$1</tt>",          /``(..*?)``/g ],
 		["<span style='font-variant:small-caps;'>$1</span>", /==(..*?)==/g ],
@@ -165,6 +167,40 @@ var bd = (function() {
 
 	// BLOCK functions return the line index after the block
 
+	function Template(doc, start, end, pattern) {
+		var lines = [];
+		var before = [];
+		var after = [];	
+		var b = start+1;
+		while (b < end && /^= /.test(doc.line(b))) {
+			before.push(doc.line(b++).substring(2));
+		}
+		var i = doc.scan(b, end, pattern);
+		var a = i-1;
+		while (a > b && /^= /.test(doc.line(a))) {
+			after.push(doc.line(a--).substring(2));
+		}
+		var template = doc.lines.slice(b, a+1);
+		var j = doc.scan(i+1, end, pattern);
+		Array.prototype.push.apply(lines, before);
+		for (var r = i+1; r < j; r++) {
+			var row = doc.line(r).split(';');
+			for (var l = 0; l < template.length; l++) {
+				var line = template[l];
+				for (var v = 0; v < row.length; v++) {
+					line = line.replace("$"+(v+1), row[v]);
+				}
+				lines.push(line);
+			}
+		}
+		Array.prototype.push.apply(lines, after);
+		var olines = doc.lines;
+		doc.lines = lines;
+		doc.process(0,lines.length);
+		doc.lines = olines;
+		return j+1;
+	}
+
 	function Meta(doc, start, end) {
 		var line = doc.line(start);
 		var i = line.indexOf(':');
@@ -187,7 +223,7 @@ var bd = (function() {
 			if (doc.html.endsWith("</p>")) {
 				doc.html = doc.html.substring(0, doc.html.length-4)+"\n";
 			} else {
-				doc.add("\n<p>");
+				doc.add("<p>");
 			}
 			doc.add(processLine(line));
 			doc.add("</p>");
@@ -213,7 +249,7 @@ var bd = (function() {
 
 	function prefixedBlock(doc, start, end, pattern, tag, attr) {
 		var i = doc.unindent(2, start, end, pattern);
-		doc.add("<"+tag+" "+attr+">\n"); 
+		doc.add("\n<"+tag+" "+attr+">"); 
 		doc.process(start, i);
 		doc.add("</"+tag+">\n");
 		return i;
@@ -221,7 +257,7 @@ var bd = (function() {
 
 	function fencedBlock(doc, start, end, pattern, tag, attr) {
 		var i = doc.scan(start+1, end, pattern);
-		doc.add("<"+tag+" "+attr+" "+doc.styles(doc.line(start), "block")+">\n"); 
+		doc.add("\n<"+tag+" "+attr+" "+doc.styles(doc.line(start), "block")+">"); 
 		doc.process(start+1, i);
 		doc.add("</"+tag+">\n");
 		return i+1;
@@ -251,7 +287,7 @@ var bd = (function() {
 		var l0 = doc.html.length;
 		// following line must be done before processing the lines!
 		var example = escapeHTML(doc.lines.slice(start, i).join("\n"));
-		example = example.replace(/ /g, "<span>&blank;</span>");
+		example = example.replace(/ /g, "<span> </span>");
 		doc.process(start, i);
 		var content = escapeHTML(doc.html.substring(l0).trim());
 		doc.html=doc.html.substring(0, l0);
@@ -268,7 +304,7 @@ var bd = (function() {
 		var l0 = doc.html.length;
 		// following line must be done before processing the lines!
 		var example = escapeHTML(doc.lines.slice(start, i).join("\n"));
-		example = example.replace(/ /g, "<span>&blank;</span>");
+		example = example.replace(/ /g, "<span> </span>");
 		doc.process(start, i);
 		var content = doc.html.substring(l0);
 		doc.html=doc.html.substring(0, l0);
@@ -380,13 +416,26 @@ var bd = (function() {
 		return i;
 	}
 
-	function Footnote(doc, start, end, pattern) {
+	function Note(doc, start, end, pattern) {
 		var note = pattern.exec(doc.line(start));
-		doc.add("<small id=\""+note[1]+"\" "+doc.styles(note[3], 'note')+"><dl><dt><def>"+note[1]+"</def></dt><dd>");
+		var aside = note[3] || note[4];
+		var caption = note[1] + (note[2] ? note[2] : "");
+		if (aside) {
+			//TODO use name for collections
+			doc.add("<aside "+doc.styles(note[6], 'note '+note[1].toLowerCase())+">");
+			doc.lines[start] = " *"+caption+"*"+note[5];
+		} else {
+			doc.add("<small id=\""+note[1]+"\" "+doc.styles(note[6], 'note')+"><dl><dt><def>"+caption+"</def></dt><dd>");
+			doc.lines[start] = note[5];
+		}
 		var i = doc.unindent(2, start+1, end, /^\s{2}|^\s?$/);
-		doc.lines[start] = note[2];
 		doc.process(start, i);
-		doc.add("</dd></small>");
+		if (aside) {
+			doc.add("</aside>");
+		} else {
+			doc.add("</dd></small>");
+		}
+		return i;
 	}
 
 	function Definition(doc, start, end, pattern) {
