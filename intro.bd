@@ -11,6 +11,7 @@ is a definite flexible
 that enables low complexity, low footprint implementations while maintaining a 
 concise and regular markup.
 
+
 1 Overview
 
 _{{_emphasis_}}_, *{{*strong emphasis*}}*, "{{"title"}}",
@@ -61,8 +62,8 @@ Stylistic markup uses two character marks:
 3 Text Highlighting
 
 Colors are stylistic (two characters marks) `*::*_text_*::{*_color_*}*`:
-? ::coloured::{orange}
-? ::coloured::{#7FDBFF}
+? ::text::{orange}
+? ::text::{#7FDBFF}
 
 Annotations are semantic (one character marks) `*!*_text_*!{*_semantic_*}*`:
  A numeric annotation indicates a label:
@@ -99,7 +100,7 @@ HTML-entities can be used by name:
 ? &loz;
 
 
-5 Page Layout
+5 Text Layout
  
 Manual line breaks are forced using `*\\*`:
 ? manual line \\ break
@@ -293,16 +294,16 @@ The number or letter has to followed by a dot and a space `_n_*. *`:
 ? #. two
 ? 4. three
 
-`*#*` can be used instead of an actual number or letter:
+`*#.*` can be used instead of an actual number or letter:
 ? #. one
 ? #. two
 
-Equally lists can use lower-case letters:
+Equally lists can use lower-case letters `_a_*.*`:
 ? c. cesar
 ? d. delta
 ? #. eta
 
-Or upper-case letters:
+Or upper-case letters `_A_*.*`:
 ? A. Alpha
 ? #. Beta
 
@@ -315,7 +316,7 @@ And even roman numbers work, but here the lists have to start with `*I.*`
 In case of letters a specified item cannot have multiple letters. 
 Instead the placeholder `*#.*` should be used.
 
-Asterisk `*{{*}}*` followed by a space are used for bullet lists.
+Asterisk `*{{*}}* ` followed by a space are used for bullet lists.
 
 ? * one
 ? * other
@@ -324,19 +325,17 @@ Any content can be nested within an item.
 All content that should be nested has to be indented by 2 spaces and/or tabs
 per level.
 
-? 1. one
-?   further text in one
-?         ----
-?   and further text
+? 1. first item:
+?   indent 2 to
+?   continue
 ? 
-?   also with a new paragraph
+?   next paragraph
 ? #. second item
-?   a. another nested list
-?   #. with items
-?     and nested content
+?   a. start of a sublist
+?   #. everything is 
+?     indented 2 more spaces
 ?     ```
-?     all content is indented
-?     blocks as well
+?     to contine the item
 ?     ```
 
  A line starting with a definition starts a definition block:
@@ -359,10 +358,10 @@ Three or more backticks `*{{```}}*` start a code listing:
 ? 1 * 2 * 3 = 6
 ? ```
 
-An aseterix `*{{*}}*` indicates the advanced listing where highlighting is 
-indicated 
-* with `*!*` to highlight the whole line
-* with any other character to give the character that marks sections to highlight (same character starts end ends)
+An aseterixsk `*{{*}}*` following the backticks enables the advanced listing 
+where the first character is used to indicate highlighting. 
+ A `*!*` highlights the whole line. Any other character states the character
+used to mark start and end of the text section to hightlight `*?*_section_*?*`:
 ? ```*
 ? ! 1 * 2 * 3 = 6
 ? x 1 + 2 + 3 = x6x
@@ -404,7 +403,7 @@ If the caption isn't stated first, the caption goes below the images:
 
 Tables are meant for tabular information. 
  A line is either a row or a column; columns contain text, not blocks (use minipages for layout).
-Each table row or column start and ends with `*:*`.
+Each table row or column starts and ends with `*:*`.
  A new row is started using `*:..*...*..:*`:
 ? :..........:
 ? : TH col 1 :*
@@ -443,7 +442,7 @@ Styles can be used to change border color or width:
 ? | TD col 2 |
 ? |----------|
 
-Rows and columns can be spaned using the option `*{*_colspan_ [_rowspan_]*}*`:
+Rows and columns can be span using the option `*{*_colspan_ [_rowspan_]*}*`:
 
 ? |----------|
 ? | TH col 12|*{2}
@@ -516,6 +515,10 @@ However, includes are not allowed cross domain:
 
 19 Minipages
 
+ A minipage is a generic container for page layout purposes.
+It starts with three or more asterisk symbols `*{{***}}*+`. 
+The end mark has to use as many asterisk symbols as the start mark.
+
 ? ***{aside}[bc--blue bw-2]
 ? ****[50%][bc--red bw-2][<=]
 ? another page within a page
@@ -526,8 +529,16 @@ However, includes are not allowed cross domain:
 ? and back in the outer minipage
 ? ***
 
+Nesting can be done by using more asterisk symbols for deeper nested blocks or
+the other way around by using the most symbols for the most outer block.
+
+The option can be used to state the type of the block, `*{*_type_*}*`.
+The types `address`, `article`, `aside`, `details`, `figcaption`, `figure`, 
+`footer`, `header`, `menu`, `nav` and `section` are rendered as tags. 
+All other types become a CSS `class`.
+
 As blocks cope with missing end marks one can start a document with a minipage
-that is never closed to apply some _global_ options.
+that is never closed to apply options to the whole document.
 
 
 20 Templates
@@ -543,7 +554,9 @@ Templates have two parts:
 ? Baz; Que
 ? ==============
 
- A table needs static parts before each data row
+ A fix parts before or after the template that is repeated for every data row
+are prefixed with a `*= *` (space!). Lines that are before the template are
+once before all rows, those after once after all rows.
 
 ? ==========
 ? = :...........:
@@ -561,9 +574,17 @@ Templates have two parts:
 
 21 Documentation
 
-? ? _shows_ an example
+Boildown has two build in blocks to document or debug itself.
 
-? ! _shows_ the HTML
+The markup is prefixed with `*? *` (space!) to show markup and output
+side by side as an example. 
+? ? _foo_
+? ? *bar*
+
+The markup is prefixed with `*! *` (space!) to show markup and html output
+side by side.
+? ! _foo_
+? ! _bar_
 
 
 22 Troubleshooting

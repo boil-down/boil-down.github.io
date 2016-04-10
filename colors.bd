@@ -5,7 +5,7 @@
 
 A BACKGROUND 
 
-::          ::[c-white cp-2][100%][<>][11pt]
+::          ::[c-white p-2][100%][<>][11pt]
 :............:
 : bc-black   :{5}[bc-black]
 :............:
@@ -32,7 +32,7 @@ A BACKGROUND
 
 B BACKGROUND 50% TRANSPARENT
 
-::          ::[c-black cp-2][100%][<>][11pt]
+::          ::[c-black p-2][100%][<>][11pt]
 :............:
 : bc-black50 :[bc-black50][12.5%]
 : bc-navy50  :[bc-navy50][12.5%]
@@ -57,7 +57,7 @@ B BACKGROUND 50% TRANSPARENT
 
 C FOREGROUND
 
-::         ::[cp-2][100%][<>][*][11pt]
+::         ::[p-2][100%][<>][*][11pt]
 :...........:[bw-1 bc--silver]
 : c-black   :[c-black][12.5%]
 : c-navy    :[c-navy][12.5%]
