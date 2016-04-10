@@ -128,7 +128,8 @@
 .doc .note ol, 
 .doc .note ul { margin: 0; padding-left: 1em; }
 .doc aside.note { border-left-width: 5px; border-left-style: solid; padding: 10px; margin-bottom: 20px; overflow: hidden; clear: both; font-size: 12px; font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif; color: #444; line-height: 1.5; }
-.doc aside.note.info { background: rgba(255, 220, 0, 0.25); border-color: rgba(255, 220, 0, 0.5); border-left-width: 5px; }
+.doc aside.note.info { background: rgba(255, 220, 0, 0.25); border-color: rgba(255, 220, 0, 0.5); }
+.doc aside.note.todo { background: rgba(255, 133, 27, 0.25); border-color: rgba(255, 133, 27, 0.5); }
 .doc aside.note.obsolete { background: rgba(255, 65, 54, 0.25); border-color: rgba(255, 65, 54, 0.5); }
 
 /* basic reset */

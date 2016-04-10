@@ -11,11 +11,16 @@ is a definite flexible
 that enables low complexity, low footprint implementations while maintaining a 
 concise and regular markup.
 
+The language is meant to be interpreted on client site by a "reader" program
+wherefore it intentionally constrians what can be expressed without taking
+away too much freedom.
+Yet, this requires it to have quite a range marks and style options as no
+less constraint language can be used. 
+
 
 1 Overview
 
-_{{_emphasis_}}_, *{{*strong emphasis*}}*, "{{"title"}}",
- /{{/alternative voice/}}/ , -{{-inaccurate text-}}- , :{{:term:}}: 
+[TODO]{Jan} a tabular overview
 
 
 2 Text Formatting
@@ -465,25 +470,28 @@ Rows and columns can be span using the option `*{*_colspan_ [_rowspan_]*}*`:
 ? |----------|
 
 
-17 Editing
+17 Edits
+
   Inline...
 ? --deleted text--
 
 ? ++added text++
 
+Also semnatic annotation can be used, e.g. the predefined `spelling` or `grammar`:
 ? !wrong text!{spelling}
 ? !wrong text!{grammar}
 
-  Blocks...
+ A block of removed content starts and ends with exactly three dashes `*{{---}}*`:
 ? ---
 ? deleted block
 ? ---
 
+ A block that has been insered starts and ends with exactly three plus signs `*{{+++}}*`
 ? +++
 ? added block
 ? +++
 
-Options are used to set thedate of an edit `*{*_date_*}*`:
+The options set the change date `*{*_date_*}*`:
 
 ? +++{2016-04-01}
 ? Added 1.of April
