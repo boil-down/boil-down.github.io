@@ -3,34 +3,61 @@
 ****[page][<>]
                          COLORS
 
-A) BACKGROUND 
+A BACKGROUND 
 
-::          ::[c-white cp-2][100%][<>]
+::          ::[c-white cp-2][100%][<>][11pt]
 :............:
-: bc-black   :[bc-black][12.5%]
-: bc-navy    :[bc-navy][12.5%]
-: bc-blue    :[bc-blue][12.5%]
-: bc-aqua    :[bc-aqua c-black][12.5%]
-: bc-teal    :[bc-teal][12.5%]
-: bc-olive   :[bc-olive][12.5%]
-: bc-green   :[bc-green][12.5%]
-: bc-lime    :[bc-lime][12.5%]
+: bc-black   :{5}[bc-black]
 :............:
-: bc-silver  :[bc-silver c-black]
-: bc-gray    :[bc-gray c-black]
-: bc-purple  :[bc-purple]
-: bc-fuchsia :[bc-fuchsia]
-: bc-maroon  :[bc-maroon]
-: bc-red     :[bc-red]
-: bc-orange  :[bc-orange]
+: bc-navy    :[bc-navy][20%]
+: bc-blue    :[bc-blue][20%]
+: bc-aqua    :[bc-aqua c-black][20%]
+: bc-teal    :[bc-teal][20%]
+: bc-gray    :[bc-gray c-black][20%]
+:............:
 : bc-yellow  :[bc-yellow c-black]
+: bc-lime    :[bc-lime]
+: bc-green   :[bc-green]
+: bc-olive   :[bc-olive]
+: bc-silver  :[bc-silver c-black]
 :............:
-: bc-white   :{8}[bc-white c-black bc--silver bw-1]
+: bc-orange  :[bc-orange]
+: bc-red     :[bc-red]
+: bc-maroon  :[bc-maroon]
+: bc-fuchsia :[bc-fuchsia]
+: bc-purple  :[bc-purple]
+:............:
+: bc-white   :{5}[bc-white c-black bc--silver bw-1]
 :............:
 
-B) FOREGROUND
+B BACKGROUND 50% TRANSPARENT
 
-::         ::[cp-2][100%][<>][*]
+::          ::[c-black cp-2][100%][<>][11pt]
+:............:
+: bc-black50 :[bc-black50][12.5%]
+: bc-navy50  :[bc-navy50][12.5%]
+: bc-blue50  :[bc-blue50][12.5%]
+: bc-aqua50  :[bc-aqua50][12.5%]
+: bc-teal50  :[bc-teal50][12.5%]
+: bc-olive50 :[bc-olive50][12.5%]
+: bc-green50 :[bc-green50][12.5%]
+: bc-lime50  :[bc-lime50][12.5%]
+:............:
+: bc-silver50:[bc-silver50]
+: bc-gray50  :[bc-gray50]
+: bc-purple50:[bc-purple50]
+: bc-fuchsia50:[bc-fuchsia50]
+: bc-maroon50:[bc-maroon50]
+: bc-red50   :[bc-red50]
+: bc-orange50:[bc-orange50]
+: bc-yellow50:[bc-yellow50]
+:............:
+: bc-white50 :{8}[bc-white50 bc--silver bw-1]
+:............:
+
+C FOREGROUND
+
+::         ::[cp-2][100%][<>][*][11pt]
 :...........:[bw-1 bc--silver]
 : c-black   :[c-black][12.5%]
 : c-navy    :[c-navy][12.5%]

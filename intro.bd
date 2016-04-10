@@ -402,43 +402,67 @@ If the caption isn't stated first, the caption goes below the images:
 
 16 Tables
 
-? :: green colors ::['][<=>]
-? :.........:[#4CAF50]
-? : Green   :*{2}
-? :.........:[#4CAF50]
-? : 500     :
-? : #4CAF50 :
-? :.........:[#E8F5E9]
-? : 50      :
-? : #E8F5E9 :
-? :.........:[#C8E6C9]
-? : 100     :
-? : #C8E6C9 :
-? :.........:[#A5D6A7]
-? : 200     :
-? : #A5D6A7 :
-? :.........:[#81C784]
-? : 300     :
-? : #81C784 :
-? :.........:[#66BB6A]
-? : 400     :
-? : #66BB6A :
-? :.........:[#4CAF50]
-? : 500     :
-? : #4CAF50 :
-? :.........:[#43A047]
-? : 600     :
-? : #43A047 :
-? :.........:[#388E3C]
-? : 700     :
-? : #388E3C :
-? :.........:[#2E7D32]
-? : 800     :
-? : #2E7D32 :
-? :.........:[#1B5E20]
-? : 900     :
-? : #1B5E20 :
-? :.........:
+ A line is either a row or a column. 
+Each table row or column start and ends with `*:*`.
+ A new row is started using `*:..*...*..:*`:
+? :..........:
+? : TH col 1 :*
+? : TH col 2 :*
+? :..........:
+? : TD col 1 :
+? : TD col 2 :
+? :..........:
+
+Solid borders use `*|*` for `*:*` and `*-*` for `*.*`:
+
+? |----------|
+? | TH col 1 |*
+? | TH col 2 |*
+? |----------|
+? | TD col 1 |
+? | TD col 2 |
+? |----------|
+
+This can be mixed to just get certain borders:
+
+? |----------|
+? : TH col 1 |*
+? | TH col 2 :*
+? :..........:
+? | TD col 1 :
+? : TD col 2 |
+
+Styles can be used to change border color or width:
+
+? |----------|[bc--red bw-2]
+? | TH col 1 |*
+? | TH col 2 |*
+? |----------|
+? | TD col 1 |[bc--green]
+? | TD col 2 |
+? |----------|
+
+Rows and columns can be spaned using the option `*{*_colspan_ [_rowspan_]*}*`:
+
+? |----------|
+? | TH col 12|*{2}
+? |----------|
+? | TD col 1 |{1 2}
+? | TD col 2 |
+? |----------|
+? | TD col 2 |
+? |----------|
+
+ A caption can be added using `*::*_text_*::*` before or after the table body:
+
+? :: caption ::
+? |----------|
+? | TH col 1 |*
+? | TH col 2 |*
+? |----------|
+? | TD col 1 |
+? | TD col 2 |
+? |----------|
 
 
 17 Editing
@@ -539,4 +563,19 @@ Templates have two parts:
 ? ? _shows_ an example
 
 ? ! _shows_ the HTML
+
+
+22 Troubleshooting
+Evaluating the inline markup is not sequential from left to right.
+It is a sequence of different replacements applied to the whole line.
+Therefore there are unexpected results:
+
+? `*a` b `c*`
+? *`d* e *f`*
+
+When the same markup relevant character is used at least twice without it 
+being meant as markup it has to be escaped.
+
+? `{{*}}a` b `c*`
+? *`d* e *f{{`}}*
 

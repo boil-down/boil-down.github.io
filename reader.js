@@ -104,10 +104,10 @@ var bdReader = (function() {
 		}
 		range = /#S([\w.]+)-S([\w.]+)/.exec(url);
 		if (range) {
-			var doc = bd.toDoc(markup);
+			var doc = bd.init(markup);
 			var s = doc.scan(0, doc.lines.length, new RegExp("^"+range[1].replace(".", "\\.")));
 			var e = doc.scan(s+1, doc.lines.length, new RegExp("^"+range[2].replace(".", "\\.")));
-			doc.process(s,e);			
+			doc.doBlock(s,e);			
 			return doc.html;
 		}
 		return bd.toHTML(markup);

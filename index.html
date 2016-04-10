@@ -29,13 +29,13 @@ html { height: 100%; }
 	<script src="/boildown.js"></script>
 	<script src="/reader.js"></script>
     <script>
-	var url = bd.URLparam("url");
+	var url = bd.decodeParam("url");
 	if (!url) {
 		url="index.bd";
 	}
 	bdReader.open({url: url, docId: "bdDocument", markupId: "bdMarkup", includes: true, redirect: true});
 	document.getElementById('bdURL').value = url;
-	var target = bd.URLparam("target");
+	var target = bd.decodeParam("target");
 	if (target) {
 		document.getElementById('bdURL').value=target;
 	}
