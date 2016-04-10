@@ -116,17 +116,23 @@ var bd = (function() {
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bd-functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-	function decodeParam(name) {
-		var url = new RegExp("[&?]"+name+"=([^&]+)").exec(window.location.search);
-		return url && url[1] ? decodeURIComponent(url[1]) : "";
-	}
-
 	function toHTML(markup, start, end) {
 		var doc = new Doc(markup);
 		start = start || 0;
 		end = end || doc.lines.length;
 		doc.doBlock(start, end);
 		return doc.html;
+	}
+
+	function escapeHTML(html) {
+		var div = document.createElement('div');
+		div.appendChild(document.createTextNode(html));
+		return div.innerHTML;
+	}
+
+	function decodeParam(name) {
+		var url = new RegExp("[&?]"+name+"=([^&]+)").exec(window.location.search);
+		return url && url[1] ? decodeURIComponent(url[1]) : "";
 	}
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Doc-functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -252,14 +258,7 @@ var bd = (function() {
 		}
 	}
 
-	function escapeHTML(html) {
-		var div = document.createElement('div');
-		div.appendChild(document.createTextNode(html));
-		return div.innerHTML;
-	}
-
-
-	/* Blocks */
+	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Blocks ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	
 	function Template(doc, start, end, pattern) {
 		var lines = [];

@@ -402,7 +402,8 @@ If the caption isn't stated first, the caption goes below the images:
 
 16 Tables
 
- A line is either a row or a column. 
+Tables are meant for tabular information. 
+ A line is either a row or a column; columns contain text, not blocks (use minipages for layout).
 Each table row or column start and ends with `*:*`.
  A new row is started using `*:..*...*..:*`:
 ? :..........:
