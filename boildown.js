@@ -55,6 +55,7 @@ var bd = (function() {
 		[" <def>$1</def> ",      / :([^: \t].*?[^: \t]): /g ],		
 		["<span style='color: $2$3;'>$1</span>", /::([^:].*?)::\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
 		["<a href=\"#sec-$1\" class='bd-sref'>$1</a>", /\^\[((?:\d+|[A-Z])(?:\.\d+)*)\]/g ],
+		[substRef,               /\^\[# ?([-\w ]+)\]/g ], 
 		["<a href='#$1' class='bd-nref'>$1</a>", /\^\[(\w+)\]/g ],
 	];
 
@@ -111,7 +112,8 @@ var bd = (function() {
 		init: function (markup) { return new Doc(markup); },
 		toHTML: toHTML,
 		escapeHTML: escapeHTML,
-		decodeParam: decodeParam
+		decodeParam: decodeParam,
+		text2id: text2id
 	};
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bd-functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -133,6 +135,10 @@ var bd = (function() {
 	function decodeParam(name) {
 		var url = new RegExp("[&?]"+name+"=([^&]+)").exec(window.location.search);
 		return url && url[1] ? decodeURIComponent(url[1]) : "";
+	}
+
+	function text2id(text) {
+		return text.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").toLowerCase();
 	}
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Doc-functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -199,6 +205,8 @@ var bd = (function() {
 		return substMarkup(bd.escapeHTML(line.replace(/\$(\w+)\$/, substParam)));
 	}
 
+	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Inline ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 	function substMarkup(line) {
 		line = line.replace(/\[\[([^ ]+)( [^\]]+)?\]\](\*)?/g, substLink);		
 		var plains = [];		
@@ -234,6 +242,10 @@ var bd = (function() {
 			}
 		}
 		return link;
+	}
+
+	function substRef(ref, text) {
+		return "<a href=\"#"+bd.text2id(text)+"\" class='ref'>"+text+"</a>";
 	}
 
 	function substParam(markup, name) {
@@ -328,16 +340,12 @@ var bd = (function() {
 		var noTextIdStyle = pattern.exec(doc.line(start));
 		var no = noTextIdStyle[1];
 		var text = noTextIdStyle[2];
-		var id = noTextIdStyle[3] ? noTextIdStyle[3] : text2id(text);
+		var id = noTextIdStyle[3] ? noTextIdStyle[3] : bd.text2id(text);
 		var title = /^\s{5}$/.test(no);
 		var noa = /[A-Z0-9]/.test(no) ? "<a id=\"sec-"+no.replace(")", "").trim()+"\"></a> ": "";
 		var n = title ? 1 : no ? no.split(/\./).length+1 : 2;
 		doc.add("\n<h"+n+" id=\""+id+"\" "+doc.doStyles(noTextIdStyle[4])+">"+noa+doc.doInline(text)+"</h"+n+">\t");
 		return start+1;
-	}
-
-	function text2id(text) {
-		return text.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").toLowerCase();
 	}
 
 	function prefixedBlock(doc, start, end, pattern, tag, attr) {
@@ -578,7 +586,7 @@ var bd = (function() {
 		var tagged = page.length > 2 && page[2];
 		var retag = tagged && TAGS.indexOf(page[2]) >= 0;
 		var tag = retag? page[2] : "div";
-		var classes = "bd-mp "+(tagged && !retag ? page[2] : "");
+		var classes = "minipage "+(tagged && !retag ? page[2] : "");
 		doc.add("<"+tag+" "+doc.doStyles(line, classes)+"><div>\n");
 		doc.doBlock(start+1, i); 
 		doc.add("</div></"+tag+">\n");

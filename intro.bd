@@ -89,7 +89,6 @@ Annotations are semantic (one character marks) `*!*_text_*!{*_semantic_*}*`:
 ? !label-14!{14}
 ? !label-15!{15}
 ? !label-16!{16}
-? !label-17!{17}
 
 
 4 Special Characters
@@ -231,6 +230,8 @@ To escape from blocks just indent the line by an additional space or tab.
 Links refer to other documents and are given as a pairs of `*[[*_url_ [_label_]*]]*`:
 ? [[/relative/url]]
 
+? [[/relative/url/]]
+
 ? [[/relative/url label]]
 
 ? [[http://dilbert.com/]]
@@ -261,6 +262,10 @@ References are links to other sections within the same document.
 ? See part ^[I]
 
 ? See section ^[I.1.1]
+
+Alternativly a reference can be made by hading text `*^[#*_heading_*]*`:
+
+? See ^[#Separator Lines]
 
  Other notes, like footnotes, are named with letters and digits `*^[*_name_*]*`:
 

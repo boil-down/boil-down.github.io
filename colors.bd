@@ -5,80 +5,85 @@
 
 A BACKGROUND 
 
-::          ::[c-white p-2][100%][<>][11pt]
+::          ::[ff-mono c-white p-2em][99%][<>][1rem][*]
 :............:
-: bc-black   :{5}[bc-black]
+: bc-black   :[bc-black][33%]
+: bc-gray    :[bc-gray c-black][33%]
+: bc-silver  :[bc-silver c-black][33%]
 :............:
-: bc-navy    :[bc-navy][20%]
-: bc-blue    :[bc-blue][20%]
-: bc-aqua    :[bc-aqua c-black][20%]
-: bc-teal    :[bc-teal][20%]
-: bc-gray    :[bc-gray c-black][20%]
+: bc-blue    :[bc-blue]
+: bc-teal    :[bc-teal]
+: bc-aqua    :[bc-aqua c-black]
 :............:
-: bc-yellow  :[bc-yellow c-black]
-: bc-lime    :[bc-lime]
-: bc-green   :[bc-green]
 : bc-olive   :[bc-olive]
-: bc-silver  :[bc-silver c-black]
+: bc-green   :[bc-green]
+: bc-lime    :[bc-lime]
 :............:
-: bc-orange  :[bc-orange]
 : bc-red     :[bc-red]
+: bc-orange  :[bc-orange]
+: bc-yellow  :[bc-yellow c-black]
+:............:
 : bc-maroon  :[bc-maroon]
-: bc-fuchsia :[bc-fuchsia]
 : bc-purple  :[bc-purple]
+: bc-fuchsia :[bc-fuchsia]
 :............:
-: bc-white   :{5}[bc-white c-black bc--silver bw-1]
-:............:
+| bc-white   |{3}[bc-white c-black][25%]
+|------------|
+
 
 B BACKGROUND 50% TRANSPARENT
 
-::          ::[c-black p-2][100%][<>][11pt]
+::          ::[ff-mono c-black p-2em][99%][<>][1rem][*]
 :............:
-: bc-black50 :[bc-black50][12.5%]
-: bc-navy50  :[bc-navy50][12.5%]
-: bc-blue50  :[bc-blue50][12.5%]
-: bc-aqua50  :[bc-aqua50][12.5%]
-: bc-teal50  :[bc-teal50][12.5%]
-: bc-olive50 :[bc-olive50][12.5%]
-: bc-green50 :[bc-green50][12.5%]
-: bc-lime50  :[bc-lime50][12.5%]
+: bc-black50 :[bc-black50][33%]
+: bc-gray50  :[bc-gray50][33%]
+: bc-silver50:[bc-silver50][33%]
 :............:
-: bc-silver50:[bc-silver50]
-: bc-gray50  :[bc-gray50]
-: bc-purple50:[bc-purple50]
-: bc-fuchsia50:[bc-fuchsia50]
-: bc-maroon50:[bc-maroon50]
+: bc-blue50  :[bc-blue50]
+: bc-teal50  :[bc-teal50]
+: bc-aqua50  :[bc-aqua50]
+:............:
+: bc-olive50 :[bc-olive50]
+: bc-green50 :[bc-green50]
+: bc-lime50  :[bc-lime50]
+:............:
 : bc-red50   :[bc-red50]
 : bc-orange50:[bc-orange50]
 : bc-yellow50:[bc-yellow50]
 :............:
-: bc-white50 :{8}[bc-white50 bc--silver bw-1]
+: bc-purple50:[bc-purple50]
+: bc-fuchsia50:[bc-fuchsia50]
+: bc-maroon50:[bc-maroon50]
 :............:
+| bc-white50 |{3}[bc-white50]
+|------------|
 
 C FOREGROUND
 
-::         ::[p-2][100%][<>][*][11pt]
-:...........:[bw-1 bc--silver]
-: c-black   :[c-black][12.5%]
-: c-navy    :[c-navy][12.5%]
-: c-blue    :[c-blue][12.5%]
-: c-aqua    :[c-aqua c-black][12.5%]
-: c-teal    :[c-teal][12.5%]
-: c-olive   :[c-olive][12.5%]
-: c-green   :[c-green][12.5%]
-: c-lime    :[c-lime bc--silver][12.5%]
-:...........:[bw-1 bc--silver]
-: c-silver  :[c-silver]
-: c-gray    :[c-gray]
-: c-purple  :[c-purple]
-: c-fuchsia :[c-fuchsia]
-: c-maroon  :[c-maroon]
-: c-red     :[c-red]
-: c-orange  :[c-orange]
-: c-yellow  :[c-yellow c-black]
-:...........:
-: c-white   :{8}[c-white bc-black]
-:...........:
+::          ::[ff-mono c-black p-2em][99%][<>][1rem][*]
+|------------|
+| c-black    |[c-black][33%]
+| c-gray     |[c-gray][33%]
+| c-silver   |[c-silver][33%]
+|------------|
+| c-blue     |[c-blue]
+| c-teal     |[c-teal]
+| c-aqua     |[c-aqua]
+|------------|
+| c-olive    |[c-olive]
+| c-green    |[c-green]
+| c-lime     |[c-lime]
+|------------|
+| c-red      |[c-red]
+| c-orange   |[c-orange]
+| c-yellow   |[c-yellow c-black]
+|------------|
+| c-purple   |[c-purple]
+| c-fuchsia  |[c-fuchsia]
+| c-maroon   |[c-maroon]
+|------------|
+| c-white    |{3}[c-white bc-gray]
+|------------|
 
 
 ****

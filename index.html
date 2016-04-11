@@ -6,8 +6,10 @@
     <title>boildown reader</title>
 	<link rel="stylesheet" href="reader.css">
 	<style>
+
 .column { width: 46%; margin: 2%; float: left; position: relative; }
 html { height: 100%; }
+body { padding: 0; margin: 0; }
 #bdBody { height: 100%; }
 #bdNavbar { display: none; background-color: #f0f0f0; border-bottom: 1px solid #aaa; padding: 4px; text-align: center; position: fixed; width: 100%; top: 0; z-index: 1; }
 .bdNav #bdNavbar { display: block; }
@@ -20,7 +22,7 @@ html { height: 100%; }
 	</style>
   </head>
   <body id="bdBody">
-	<div id="bdDocument" class="doc"></div>
+	<div id="bdDocument" class="std clr rfc"></div>
 	<pre id="bdMarkup"></pre>
 	<div id="bdNavbar">
 		<input type="text" id="bdURL" onkeypress="if (event.keyCode === 13) { window.document.location='?url='+encodeURIComponent(this.value); return true; }" />
