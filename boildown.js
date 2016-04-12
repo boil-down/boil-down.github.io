@@ -11,7 +11,7 @@ var bd = (function() {
 		[ Minipage,    /^(\*{3,})(?:\{(\w+)\})?/ ],
 		[ Listing,     /^`{3,}\*?(?:\{(\w+(?: \w+)*)\})?/ ],
 		[ Listing,     /^~{3,}\*?(?:\{(\w+(?: \w+)*)\})?/ ],
-		[ Template,    /^={3,}/ ],
+		[ Template,    /^={3,}(?:\{([- \w]+)\})?/ ],
 		[ Blockquote2, /^> / ],
 		[ Output,      /^! / ],
 		[ Sample,      /^\? / ],
@@ -97,15 +97,18 @@ var bd = (function() {
 		this.lines  = markup.split(/\r?\n/g);
 		this.html   = "";
 		this.meta   = [];
-		// common functions
+		this.collections = {};
+		// fx rendering
 		this.doBlock   = doBlock;
 		this.doInline  = doInline;
 		this.doStyles  = doStyles;
+		this.add       = function (html) { this.html+=html; }
+		// fx helpers
+		this.collection= collection;
 		this.scan      = scan;
 		this.unindent  = unindent;
 		this.minIndent = minIndent;
 		this.line      = function (n) { return this.lines[n]; }
-		this.add       = function (html) { this.html+=html; }
 	}
 
 	return {
@@ -123,6 +126,14 @@ var bd = (function() {
 		start = start || 0;
 		end = end || doc.lines.length;
 		doc.doBlock(start, end);
+		for (var c in doc.collections) {
+			if (doc.collections.hasOwnProperty(c)) {
+				var col = doc.collections[c];
+				if (col.id) {
+					rollTemplate(doc, col.start, col.end, col.entries);
+				}
+			}
+		}
 		return doc.html;
 	}
 
@@ -142,19 +153,6 @@ var bd = (function() {
 	}
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Doc-functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-	function doBlock(start, end) {
-		var i = start;
-		while (i < end) {
-			var before = i;
-			var block = first(BLOCKS, this.lines[i], 1);
-			i = block[0](this, i, end, block[1]);
-			if (i === before) { 
-				if (console && console.log) { console.log("endless loop at line "+i+": "+this.lines[i]); }
-				i++; // error recovery: continue on next line
-			}
-		}
-	}
 
 	function unindent(width, start, end, pattern) {
 		var i = start;
@@ -177,6 +175,28 @@ var bd = (function() {
 			res=Math.min(res, this.lines[i].substring(offset).search(/[^ \t]/)+offset); 
 		}
 		return res;
+	}
+
+	function collection(name) {
+		name = name || 'undefined';
+		name = bd.text2id(name).replace("-", "_");
+		if (!this.collections[name]) {
+			this.collections[name] = { entries: [] };
+		}
+		return this.collections[name];
+	}
+
+	function doBlock(start, end) {
+		var i = start;
+		while (i < end) {
+			var before = i;
+			var block = first(BLOCKS, this.lines[i], 1);
+			i = block[0](this, i, end, block[1]);
+			if (i === before) { 
+				if (console && console.log) { console.log("endless loop at line "+i+": "+this.lines[i]); }
+				i++; // error recovery: continue on next line
+			}
+		}
 	}
 
 	function doStyles(line, classes) {
@@ -273,23 +293,36 @@ var bd = (function() {
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Blocks ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	
 	function Template(doc, start, end, pattern) {
-		var lines = [];
-		var before = [];
-		var after = [];	
-		var b = start+1;
-		while (b < end && /^= /.test(doc.line(b))) {
-			before.push(doc.line(b++).substring(2));
+		var name = pattern.exec(doc.line(start))[1];
+		var i = doc.scan(start+1, end, pattern);
+		if (name) {
+			var col = doc.collection(name);
+			col.id='lazy-'+start;
+			col.start=start+1;
+			col.end=i;
+			doc.add("<div id='"+col.id+"'></div>");
+			return i+1;
 		}
-		var i = doc.scan(b, end, pattern);
-		var a = i-1;
-		while (a > b && /^= /.test(doc.line(a))) {
-			after.push(doc.line(a--).substring(2));
-		}
-		var template = doc.lines.slice(b, a+1);
 		var j = doc.scan(i+1, end, pattern);
-		Array.prototype.push.apply(lines, before);
+		var data = [];		
 		for (var r = i+1; r < j; r++) {
-			var row = doc.line(r).split(';');
+			data.push(doc.line(r).split(';'));
+		}
+		rollTemplate(doc, start+1, i, data);
+		return j+1;
+	}
+
+	function rollTemplate(doc, start, end, data) {
+		var lines = [];
+		var b = start;
+		while (b < end && /^= /.test(doc.line(b))) {
+			lines.push(doc.line(b++).substring(2));
+		}
+		var a = end-1;
+		while (a > b && /^= /.test(doc.line(a))) { a--; }
+		var template = doc.lines.slice(b, a+1);
+		for (var r = 0; r < data.length; r++) {
+			var row = data[r];
 			for (var l = 0; l < template.length; l++) {
 				var line = template[l];
 				for (var v = 0; v < row.length; v++) {
@@ -298,12 +331,13 @@ var bd = (function() {
 				lines.push(line);
 			}
 		}
-		Array.prototype.push.apply(lines, after);
+		for (var k = a + 1; k < end; k++) {
+			lines.push(doc.line(k).substring(2));
+		}
 		var olines = doc.lines;
 		doc.lines = lines;
-		doc.doBlock(0,lines.length);
+		doc.doBlock(0, lines.length);
 		doc.lines = olines;
-		return j+1;
 	}
 
 	function Meta(doc, start, end) {
@@ -344,6 +378,7 @@ var bd = (function() {
 		var title = /^\s{5}$/.test(no);
 		var noa = /[A-Z0-9]/.test(no) ? "<a id=\"sec-"+no.replace(")", "").trim()+"\"></a> ": "";
 		var n = title ? 1 : no ? no.split(/\./).length+1 : 2;
+		doc.collection('heading').entries.push([id, n, no, text]);		
 		doc.add("\n<h"+n+" id=\""+id+"\" "+doc.doStyles(noTextIdStyle[4])+">"+noa+doc.doInline(text)+"</h"+n+">\t");
 		return start+1;
 	}
@@ -528,9 +563,12 @@ var bd = (function() {
 		var note = pattern.exec(doc.line(start));
 		var aside = note[3] || note[4];
 		var caption = note[1] + (note[2] ? note[2] : "");
+		var id = 'note-'+start;
 		if (aside) {
-			//TODO use name for collections
-			doc.add("<aside "+doc.doStyles(note[6], 'note '+note[1].toLowerCase())+">");
+			var entry = [id, note[1], note[5]];
+			doc.collection(note[1]).entries.push(entry);
+			doc.collection(note[3]).entries.push(entry);
+			doc.add("<aside "+doc.doStyles(note[6], id+' note '+note[1].toLowerCase())+">");
 			doc.lines[start] = " *"+caption+"*"+note[5];
 		} else {
 			doc.add("<small id=\""+note[1]+"\" "+doc.doStyles(note[6], 'note')+"><dl><dt><def>"+caption+"</def></dt><dd>");

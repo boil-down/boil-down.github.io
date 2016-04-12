@@ -60,7 +60,7 @@
 .std .a4 { max-width: 21cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
 .std .a5 { max-width: 14.8cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
 .std .a6 {  max-width: 10.5cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
-.rfc .minipage { box-sizing: border-box; }
+.web .minipage { box-sizing: border-box; }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ clr defines colors ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /* standard colors - http://clrs.cc/ */
@@ -132,46 +132,46 @@
 .clr .bc--fuchsia, .clr tr.bc--fuchsia > *, .clr u.label-16 { border-color: #F012BE; }
 .clr .bc--purple , .clr tr.bc--purple  > *, .clr u.label-17 { border-color: #B10DC9; }
 
-/* ~~~~~~~~~~~~~~~~~~ rfc defines a simple document style ~~~~~~~~~~~~~~~~~~~ */
+/* ~~~~~~~~~~~~~~~~~~ web defines a classic web-like style ~~~~~~~~~~~~~~~~~~ */
 /* viewport types */
-.rfc .scroll { min-height: 100%; }
-.rfc .pager { background-color: #ccc; }
-.rfc .paper div { background-color: white; border: 1px outset #ccc; }
-.rfc .page > div { max-width: 40em; margin: 0 auto; padding: 1cm 0; }
-.rfc .screen { height: 100%; }
-.rfc .screen > div { width: 800px; position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.rfc .rfc > div > h2, .rfc > div > h3, .rfc > div > h4, .rfc > div > h5, .rfc > div > h6 { margin-left: -25px; }
-.rfc .rfc > div > h1 { text-align: center; margin-left: -25px; }
+.web .scroll { min-height: 100%; }
+.web .pager { background-color: #ccc; }
+.web .paper div { background-color: white; border: 1px outset #ccc; }
+.web .page > div { max-width: 40em; margin: 0 auto; padding: 1cm 0; }
+.web .screen { height: 100%; }
+.web .screen > div { width: 800px; position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.web .web > div > h2, .web > div > h3, .web > div > h4, .web > div > h5, .web > div > h6 { margin-left: -25px; }
+.web .web > div > h1 { text-align: center; margin-left: -25px; }
 
 /* fonts */
-.rfc .ff-serif { font-family: Georgia, Garamond, Palatino !important; }
-.rfc .ff-sans  { font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif !important; }
-.rfc .ff-mono  { font-family: Cousine, monospace !important; }
+.web .ff-serif { font-family: Georgia, Garamond, Palatino !important; }
+.web .ff-sans  { font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif !important; }
+.web .ff-mono  { font-family: Cousine, monospace !important; }
 
 /* semantic text-styles */
-.rfc u.spelling { display: inline-block; border-bottom: 1px dashed #FF4136; text-decoration: none; }
-.rfc u.grammar  { display: inline-block; border-bottom: 1px dashed #0074D9; text-decoration: none; }
+.web u.spelling { display: inline-block; border-bottom: 1px dashed #FF4136; text-decoration: none; }
+.web u.grammar  { display: inline-block; border-bottom: 1px dashed #0074D9; text-decoration: none; }
 
 /* labels */
-.rfc u[class^='label'] { display: inline-block; padding: 4px; margin: 1px; border-left-width: 5px; border-left-style: solid; text-decoration: none; line-height: 1em; font-size: 11px; font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif; border-radius: 3px; color: #444; }
+.web u[class^='label'] { display: inline-block; padding: 4px; margin: 1px; border-left-width: 5px; border-left-style: solid; text-decoration: none; line-height: 1em; font-size: 11px; font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif; border-radius: 3px; color: #444; }
 
 /* notes */
-.rfc .note { display: block; }
-.rfc .note p { margin: 0; }
-.rfc .note > p + p { text-indent: 1em; }
-.rfc .note ol, 
-.rfc .note ul { margin: 0; padding-left: 1em; }
-.rfc aside.note { border-left-width: 5px; border-left-style: solid; padding: 10px; margin-bottom: 20px; overflow: hidden; clear: both; font-size: 12px; font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif; color: #444; line-height: 1.5; }
-.rfc aside.note.info { background: rgba(255, 220, 0, 0.25); border-color: rgba(255, 220, 0, 0.5); }
-.rfc aside.note.todo { background: rgba(255, 133, 27, 0.25); border-color: rgba(255, 133, 27, 0.5); }
-.rfc aside.note.obsolete { background: rgba(255, 65, 54, 0.25); border-color: rgba(255, 65, 54, 0.5); }
+.web .note { display: block; }
+.web .note p { margin: 0; }
+.web .note > p + p { text-indent: 1em; }
+.web .note ol, 
+.web .note ul { margin: 0; padding-left: 1em; }
+.web aside.note { border-left-width: 5px; border-left-style: solid; padding: 10px; margin-bottom: 20px; overflow: hidden; clear: both; font-size: 12px; font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif; color: #444; line-height: 1.5; }
+.web aside.note.info { background: rgba(255, 220, 0, 0.25); border-color: rgba(255, 220, 0, 0.5); }
+.web aside.note.todo { background: rgba(255, 133, 27, 0.25); border-color: rgba(255, 133, 27, 0.5); }
+.web aside.note.obsolete { background: rgba(255, 65, 54, 0.25); border-color: rgba(255, 65, 54, 0.5); }
 
 /* examples */
-.rfc table.describe, table.example { width: 100%; border-spacing: 5px 0; }
-.rfc table.describe td { width: 50%; vertical-align: top; }
-.rfc table.example td { width: 50%; }
-.rfc pre.source { white-space: pre-wrap; margin: 0; }
-.rfc pre.source span { color: #ccc; }
-.rfc pre.source span:before{ content: '\2423'; position: absolute; }
-.rfc .output h1, .output h2, .output h3, .output h4, .output h5, .output h6 { margin-top: 0.3em; }
-.rfc .output { border-left: 5px solid #ccc; padding-left: 10px; }
+.web table.describe, table.example { width: 100%; border-spacing: 5px 0; }
+.web table.describe td { width: 50%; vertical-align: top; }
+.web table.example td { width: 50%; }
+.web pre.source { white-space: pre-wrap; margin: 0; }
+.web pre.source span { color: #ccc; }
+.web pre.source span:before{ content: '\2423'; position: absolute; }
+.web .output h1, .output h2, .output h3, .output h4, .output h5, .output h6 { margin-top: 0.3em; }
+.web .output { border-left: 5px solid #ccc; padding-left: 10px; }

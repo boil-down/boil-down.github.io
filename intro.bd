@@ -18,6 +18,10 @@ Yet, this requires it to have quite a range of marks and style options as no
 less constraint language can be used. 
 
 
+======={heading}
+* $3 $4
+=======
+
 1 Overview
 
 [TODO]{Jan} a tabular overview
@@ -292,7 +296,7 @@ Note annotated with an editor `*{*_editor_*}*` are general notes (not footnotes)
 The name given than refers to a type like _Info_:
 ? [Info]:{Jan} explain notes
 
-If the editor is unimportant an asterix `*[*_name_*{{]*}}*` can be used for general notes:
+If the editor is unimportant an asterisk `*[*_name_*{{]*}}*` can be used for general notes:
 ? [Obsolete]* \\ This is no longer valid...
 
 
@@ -507,7 +511,7 @@ The options set the change date `*{*_date_*}*`:
 
 Includes are just links with a hint for a reader that the target is meant to
 be included in the document at the link position. 
-The hint is done by adding an extra asterix `*{{[[}}*_url_*{{]]*}}*` after the link:
+The hint is done by adding an extra asterisk `*{{[[}}*_url_*{{]]*}}*` after the link:
 
 ? [[part.bd an include]]*
 
@@ -578,7 +582,10 @@ once before all rows, those after once after all rows.
 ? :...........:
 ? : $1 :
 ? : $2 :
-? = :...........:
+? = |-----------|
+? = | *sum*     :
+? = : x         |
+? = |-----------|
 ? ==========
 ? Foo; Bar
 ? Baz; Que
