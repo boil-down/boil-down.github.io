@@ -19,7 +19,7 @@ less constraint language can be used.
 
 
 ======={heading}
-* $3 $4
+* {{$3 $4}}
 =======
 
 1 Overview
@@ -74,7 +74,8 @@ Colors are stylistic (two characters marks) `*::*_text_*::{*_color_*}*`:
 ? ::text::{orange}
 ? ::text::{#7FDBFF}
 
-Annotations are semantic (one character marks) `*!*_text_*!{*_semantic_*}*`:
+Annotations are semantic (one character marks) `*!*_text_*!{*_semantic_*}*`.
+
  A numeric annotation indicates a label:
 ? !label-1!{1}
 ? !label-2!{2}
@@ -156,7 +157,7 @@ To specify the name of a headings anchor use `*{*_name_*}*`:
 
 Headings are usual block elements to options can be used:
 
-? 1 Chapter 1 [=>]
+? 1 Chapter 1 [~>]
 
 
 7 Quoting
@@ -214,7 +215,7 @@ at least 3 minus, plus or asterisks symbols is a separator line.
 
 Separator lines are empty but proper blocks, styles can be used:
 
-?  -------------[40%][<=][#000000]
+?  -------------[40%][<<][#000000]
 
 
 9 Escaping
@@ -231,17 +232,24 @@ To escape from blocks just indent the line by an additional space or tab.
 
 10 Links
 
-Links refer to other documents and are given as a pairs of `*[[*_url_ [_label_]*]]*`:
-? [[/relative/url]]
+Links refer to other documents and are given as a pairs of `*[[*_url_ [_label_]*]]*`.
+? [[/relative/url/ label]]
 
+? [[http://example.com/ link text]]
+
+? [[www.example.com label]]
+
+The label is optional.
 ? [[/relative/url/]]
-
-? [[/relative/url label]]
 
 ? [[http://dilbert.com/]]
 
-? [[http://dilbert.com/ dilbert]]
+ A relative URL not ending with a `/` and with no query or special characters in 
+the path the label is shortened to the last segment of the path:
+? [[/relative/url]]
 
+ A link without any path or query is a wiki-style link where a `_` becomes a space
+in the link text:
 ? [[WikiPage]]
 
 ? [[Wiki_Page]]
@@ -259,7 +267,7 @@ Texts can use markup as usual:
 
 References are links to other sections within the same document.
 
- A reference to a heading uses `*^[*_ref_*]*`:
+ A reference to a heading uses `*^[*_no_*]*`:
 
 ? See chapter ^[2]
 
@@ -267,9 +275,9 @@ References are links to other sections within the same document.
 
 ? See section ^[I.1.1]
 
-Alternativly a reference can be made by hading text `*^[#*_heading_*]*`:
+Alternativly a reference can be made by heading text `*^["*_heading_*"]*`:
 
-? See ^[#Separator Lines]
+? See ^["Separator Lines"]
 
  Other notes, like footnotes, are named with letters and digits `*^[*_name_*]*`:
 
@@ -296,9 +304,14 @@ Note annotated with an editor `*{*_editor_*}*` are general notes (not footnotes)
 The name given than refers to a type like _Info_:
 ? [Info]:{Jan} explain notes
 
-If the editor is unimportant an asterisk `*[*_name_*{{]*}}*` can be used for general notes:
-? [Obsolete]* \\ This is no longer valid...
+Alternativly a line start starts with just upper case letters folled by a `:` 
+is a note too:
+? INFO:{Jan} explain notes
 
+If the editor is unimportant an asterisk `*[*_name_*{{]*}}*` can be used for general notes:
+? [Obsolete]* \\ no longer valid...
+
+? TODO: `*` is optional for `_NAME_:` 
 
 13 Lists
 
@@ -400,7 +413,7 @@ Images are given in format `*( *_url_ [_title_]* )*`:
 ? ( bee.png a bee )
 
 Images are blocks with [[#options options]], here to make the image float right:
-? ( bee.png a bee )[=>]
+? ( bee.png a bee )[~>]
 
  A gallery or _figure_ is done by a sequence of images, the caption `*((*_caption_*))*` is optional.
 ? (( bees        ))[<>]
@@ -537,10 +550,10 @@ It starts with three or more asterisk symbols `*{{***}}*+`.
 The end mark has to use as many asterisk symbols as the start mark.
 
 ? ***{aside}[bc--blue bw-2]
-? ****[50%][bc--red bw-2][<=]
+? ****[50%][bc--red bw-2][<~]
 ? another page within a page
 ? ****
-? ****[50%][bc--green bw-2][=>]
+? ****[50%][bc--green bw-2][~>]
 ? and another one besides
 ? ****
 ? and back in the outer minipage
