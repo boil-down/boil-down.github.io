@@ -23,7 +23,8 @@ var bd = (function() {
 		[ Definition,  /^(:[^:]+:)\s*/ ],
 		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}))\s+([-+ ,.\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?\s*$/ ],
 		[ Heading,     /^([A-Z]\)?|(?:[\dIVX]+(?:\.\d+)*){1,6}|\s{5})\s\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
-		[ Heading,     /^(_+ )?([A-Z][\w]+)[\s_]*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
+		[ Heading,     /^(_+ )([^_]+)_*\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
+		[ Heading,     /^()([A-Z][\w]+)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
 		[ Paragraph,   /^(.|$)/ ]
 	];
 
@@ -56,13 +57,13 @@ var bd = (function() {
 		[" <def>$1</def> ",      / :([^: \t].*?[^: \t]): /g ],		
 		["<span style='color: $2$3;'>$1</span>", /::([^:].*?)::\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
 		["<a href=\"#sec-$1\" class='bd-sref'>$1</a>", /\^\[((?:\d+|[A-Z])(?:\.\d+)*)\]/g ],
-		[substRef,               /\^\[\"([-\w ]+)\"\]/g ], 
+		[ substRef,              /\^\[\"([-\w ]+)\"\]/g ], 
 		["<a href='#$1' class='bd-nref'>$1</a>", /\^\[(\w+)\]/g ],
 	];
 
 	const URL = /^((?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20})$/;
 
-	const LINKS = [ // inter document or external ones
+	const LINKS = [ // external ones
 		[ "bd-page", /^(\w){2,}$/ ],
 		[ "bd-link", URL ],
 	]
@@ -127,15 +128,7 @@ var bd = (function() {
 		start = start || 0;
 		end = end || doc.lines.length;
 		doc.doBlock(start, end);
-		for (var c in doc.collections) {
-			if (doc.collections.hasOwnProperty(c)) {
-				var col = doc.collections[c];
-				if (col.id) {
-					rollTemplate(doc, col.start, col.end, col.entries);
-				}
-			}
-		}
-		return doc.html;
+		return postProcessCollections(doc);
 	}
 
 	function escapeHTML(html) {
@@ -224,6 +217,23 @@ var bd = (function() {
 
 	function doInline(line) {
 		return substMarkup(bd.escapeHTML(line.replace(/\$(\w+)\$/, substParam)));
+	}
+
+	/* ~~~~~~~~~~~~~~~~~~~~~~~~~ Post-rendering ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+	function postProcessCollections(doc) {
+		var html = doc.html;
+		for (var c in doc.collections) {
+			if (doc.collections.hasOwnProperty(c)) {
+				var col = doc.collections[c];
+				if (col.placeholder) {
+					doc.html="";		
+					rollTemplate(doc, col.start, col.end, col.entries);
+					html = html.replace(col.placeholder, doc.html);
+				}
+			}
+		}
+		return html;
 	}
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Inline ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -334,10 +344,10 @@ var bd = (function() {
 		var i = doc.scan(start+1, end, pattern);
 		if (name) {
 			var col = doc.collection(name);
-			col.id='lazy-'+start;
+			col.placeholder='\n<!--PH'+start+'-->\n';
 			col.start=start+1;
 			col.end=i;
-			doc.add("<div id='"+col.id+"'></div>");
+			doc.add(col.placeholder);
 			return i+1;
 		}
 		var j = doc.scan(i+1, end, pattern);
@@ -362,8 +372,12 @@ var bd = (function() {
 			var row = data[r];
 			for (var l = 0; l < template.length; l++) {
 				var line = template[l];
+				line = line.replace("$0", data.length); 
 				for (var v = 0; v < row.length; v++) {
-					line = line.replace("$"+(v+1), row[v]);
+					var val = row[v] || "";
+					line = line.replace(new RegExp("\\$"+(v+1)+"<<(.+?)>>"), 
+						function (m, c) { return val? c.replace("$$", val) : ""; });
+					line = line.replace("$"+(v+1), val);
 				}
 				lines.push(line);
 			}
@@ -413,7 +427,8 @@ var bd = (function() {
 		var text = noTextIdStyle[2];
 		var id = noTextIdStyle[3] ? noTextIdStyle[3] : bd.text2id(text);
 		var title = /^\s{5}$/.test(no);
-		var noa = /[A-Z0-9]/.test(no) ? "<a id=\"sec-"+no.replace(")", "").trim()+"\"></a> ": "";
+		if (no) { no = no.replace(/[\)_]+/, "").trim(); }
+		var noa = /[A-Z0-9]/.test(no) ? "<a id=\"sec-"+no+"\"></a> ": "";
 		var n = title ? 1 : no ? no.split(/\./).length+1 : 2;
 		doc.collection('heading').entries.push([id, n, no, text]);		
 		doc.add("\n<h"+n+" id=\""+id+"\" "+doc.doStyles(noTextIdStyle[4])+">"+noa+doc.doInline(text)+"</h"+n+">\t");

@@ -43,11 +43,11 @@
 .std table.p-2em tr > * { padding: 2em 0 !important; }
 
 /* borders */
-.std .bw-1, .std tr.bw-1 > * { border-width: 1px; }
-.std .bw-2, .std tr.bw-2 > * { border-width: 2px; }
-.std .bw-3, .std tr.bw-3 > * { border-width: 3px; }
-.std .bw-4, .std tr.bw-4 > * { border-width: 4px; }
-.std .bw-5, .std tr.bw-5 > * { border-width: 5px; }
+.std .bw-1, .std tr.bw-1 > * { border-width: 1px; border-style: solid; }
+.std .bw-2, .std tr.bw-2 > * { border-width: 2px; border-style: solid; }
+.std .bw-3, .std tr.bw-3 > * { border-width: 3px; border-style: solid; }
+.std .bw-4, .std tr.bw-4 > * { border-width: 4px; border-style: solid; }
+.std .bw-5, .std tr.bw-5 > * { border-width: 5px; border-style: solid; }
 
 .std .bts-solid { border-top-style: solid;  }
 .std .bbs-solid { border-bottom-style: solid;  }

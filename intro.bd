@@ -8,7 +8,7 @@
 
 is a definite flexible 
  [[https://en.wikipedia.org/wiki/Lightweight_markup_language]]
-that enables low complexity, low footprint implementations while maintaining a 
+that allows low complexity, low footprint implementations while maintaining a 
 concise and regular markup.
 
 The language is meant to be interpreted on client site by a "reader" program
@@ -16,11 +16,6 @@ wherefore it intentionally constrians what can be expressed without taking
 away too much freedom.
 Yet, this requires it to have quite a range of marks and style options as no
 less constraint language can be used. 
-
-
-======={heading}
-* {{$3 $4}}
-=======
 
 1 Overview
 
@@ -634,3 +629,14 @@ being meant as markup it has to be escaped.
 ? `{{*}}a` b `c*`
 ? *`d* e *f{{`}}*
 
+
+23 Collections
+
+Print a TOC from `heading` collection:
+? _ Table of Contents _
+? ======={heading}
+? = :........:
+? : $3<<*^[$$]*>> :[>]
+? : ^["$4"] :
+? :.........:
+? =======
