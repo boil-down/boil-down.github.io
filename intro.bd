@@ -632,7 +632,12 @@ being meant as markup it has to be escaped.
 
 23 Collections
 
-Print a TOC from `heading` collection:
+Collections are lists of data-rows.
+Instead of providing explicit data-rows for ^["Templates"] the named collection 
+provides the row data. 
+
+The `heading` collection, that collects all headings within the document can
+be used to generate a "Table of Contents":
 ? _ Table of Contents _
 ? ======={heading}
 ? = :........:

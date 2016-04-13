@@ -265,6 +265,7 @@ var bd = (function() {
 	}
 
 	function substLink(link, url, text, alt) {
+		// TODO collect in "links" (need doc for that! this?)
 		for (var i = 0; i < LINKS.length; i++) {
 			if (LINKS[i][1].test(url)) {
 				var cls = LINKS[i][0]+(alt ? " bd-part" : "")
@@ -375,8 +376,8 @@ var bd = (function() {
 				line = line.replace("$0", data.length); 
 				for (var v = 0; v < row.length; v++) {
 					var val = row[v] || "";
-					line = line.replace(new RegExp("\\$"+(v+1)+"<<(.+?)>>"), 
-						function (m, c) { return val? c.replace("$$", val) : ""; });
+					line = line.replace(new RegExp("\\$"+(v+1)+"<<(.+?)>>(?:<<(.+?)>>)?"), 
+						function (m, c, e) { return val? c.replace("$$", val) : e?e:""; });
 					line = line.replace("$"+(v+1), val);
 				}
 				lines.push(line);
