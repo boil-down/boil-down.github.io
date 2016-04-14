@@ -376,7 +376,7 @@ var bd = (function() {
 				line = line.replace("$0", data.length); 
 				for (var v = 0; v < row.length; v++) {
 					var val = row[v] || "";
-					line = line.replace(new RegExp("\\$"+(v+1)+"<<(.+?)>>(?:<<(.+?)>>)?"), 
+					line = line.replace(new RegExp("<<(.*?\\$"+(v+1)+".*?)>>(?:<<(.+?)>>)?"), 
 						function (m, c, e) { return val? c.replace("$$", val) : e?e:""; });
 					line = line.replace("$"+(v+1), val);
 				}

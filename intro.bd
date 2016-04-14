@@ -641,7 +641,7 @@ be used to generate a "Table of Contents":
 ? _ Table of Contents _
 ? ======={heading}
 ? = :........:
-? : $3<<*^[$$]*>> :[>]
+? : <<*^[$3]*>> :[>]
 ? : ^["$4"] :
 ? :.........:
 ? =======
