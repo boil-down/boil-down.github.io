@@ -20,7 +20,7 @@ var bd = (function() {
 		[ Note,        /^\s*\[(\w+)\](:)?(\*?)(?:\{([-\w.]+)\})?(.*?)((?:\[[^\]]+\])*)?\s*$/ ],
 		[ Note,        /^([A-Z]+)(:)(\*?)(?:\{([-\w.]+)\})?(.*?)((?:\[[^\]]+\])*)?\s*$/ ],
 		[ Table,       /^([:\|])[-:. ](.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?\s*$/ ],
-		[ Definition,  /^(:[^:]+:)\s*/ ],
+		[ Definition,  /^:([^:]+):\s*/ ],
 		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}))\s+([-+ ,.\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?\s*$/ ],
 		[ Heading,     /^([A-Z]\)?|(?:[\dIVX]+(?:\.\d+)*){1,6}|\s{5})\s\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
 		[ Heading,     /^(_+ )([^_]+)_*\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
@@ -216,7 +216,7 @@ var bd = (function() {
 	}
 
 	function doInline(line) {
-		return substMarkup(bd.escapeHTML(line.replace(/\$(\w+)\$/, substParam)));
+		return substMarkup(this, bd.escapeHTML(line.replace(/\$(\w+)\$/, substParam)));
 	}
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~ Post-rendering ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -238,8 +238,8 @@ var bd = (function() {
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Inline ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-	function substMarkup(line) {
-		line = line.replace(/\[\[([^ ]+)( [^\]]+)?\]\](\*)?/g, substLink);		
+	function substMarkup(doc, line) {
+		line = line.replace(/\[\[([^ ]+)( [^\]]+)?\]\](\*)?/g, substLink.bind(doc));		
 		var plains = [];		
 		var stripped = "";
 		var start = 0;
@@ -265,13 +265,18 @@ var bd = (function() {
 	}
 
 	function substLink(link, url, text, alt) {
-		// TODO collect in "links" (need doc for that! this?)
 		for (var i = 0; i < LINKS.length; i++) {
 			if (LINKS[i][1].test(url)) {
 				var cls = LINKS[i][0]+(alt ? " bd-part" : "")
-				text = text ? "}}"+text.trim()+"{{" : /(?:^|\/)\w+$/.test(url) ? url.substring(url.lastIndexOf('/')+1).replace(/_/g, " ") : url;
-				url = url.startsWith("www.") ? "http://"+url : url;				
-				return "{{<a href=\""+url+"\" class=\""+cls+"\">"+text+"</a>}}";
+				var label = text 
+					? text.trim() 
+					: /(?:^|\/)\w+$/.test(url) 
+						? url.substring(url.lastIndexOf('/')+1).replace(/_/g, " ") 
+						: url;
+				url = url.startsWith("www.") ? "http://"+url : url;
+				this.collection(alt?'include':'link').entries.push([url, label, cls]);
+				if (text) { label = "}}"+label+"{{"; }
+				return "{{<a href=\""+url+"\" class=\""+cls+"\">"+label+"</a>}}";
 			}
 		}
 		return link;
@@ -307,7 +312,7 @@ var bd = (function() {
 	
 	function _IBlock(doc, start, end, pattern, tag, attr) {
 		var i = doc.unindent(2, start, end, pattern);
-		doc.add("\n<"+tag+" "+attr+">"); 
+		doc.add("\n<"+tag+" id='L"+start+"' "+attr+">"); 
 		doc.doBlock(start, i);
 		doc.add("</"+tag+">\n");
 		return i;
@@ -315,7 +320,7 @@ var bd = (function() {
 
 	function _CBlock(doc, start, end, pattern, tag, attr) {
 		var i = doc.scan(start+1, end, pattern);
-		doc.add("\n<"+tag+" "+attr+" "+doc.doStyles(doc.line(start), "block")+">"); 
+		doc.add("\n<"+tag+" id='L"+start+"' "+attr+" "+doc.doStyles(doc.line(start), "block")+">"); 
 		doc.doBlock(start+1, i);
 		doc.add("</"+tag+">\n");
 		return i+1;
@@ -323,7 +328,7 @@ var bd = (function() {
 
 	function _EBlock(doc, start, end, pattern, fcontent) {
 		var i = doc.unindent(2, start, end, pattern);
-		doc.add("<table class='example'><tr><td><pre class='source'><code>");
+		doc.add("<table class='example' id='L"+start+"'><tr><td><pre class='source'><code>");
 		var l0 = doc.html.length;
 		// OBS! order matters as doc is changed
 		var example = bd.escapeHTML(doc.lines.slice(start, i).join("\n"));
@@ -373,12 +378,15 @@ var bd = (function() {
 			var row = data[r];
 			for (var l = 0; l < template.length; l++) {
 				var line = template[l];
-				line = line.replace("$0", data.length); 
+				line = line.replace("$$", data.length);
+				line = line.replace("$0", r+1); 
 				for (var v = 0; v < row.length; v++) {
 					var val = row[v] || "";
-					line = line.replace(new RegExp("<<(.*?\\$"+(v+1)+".*?)>>(?:<<(.+?)>>)?"), 
-						function (m, c, e) { return val? c.replace("$$", val) : e?e:""; });
-					line = line.replace("$"+(v+1), val);
+					var n = v+1;
+					var $n = new RegExp("\\$"+n, "g");
+					line = line.replace(new RegExp("<<(.*?\\$"+n+".*?)>>(?:<<(.+?)>>)?", "g"), 
+						function (m, c, e) { return val? c.replace($n, val) : e?e:""; });
+					line = line.replace($n, val);
 				}
 				lines.push(line);
 			}
@@ -438,11 +446,13 @@ var bd = (function() {
 
 	function Blockquote(doc, start, end, pattern) {
 		var attr = pattern.exec(doc.line(start))[1];
+		doc.collection('quote').entries.push(['L'+start, attr]);
 		if (attr) { attr = "cite='"+attr+"'"; };
 		return _CBlock(doc, start, end, pattern, "blockquote", attr);
 	}
 
 	function Blockquote2(doc, start, end, pattern) {
+		doc.collection('quote').entries.push(['L'+start, undefined]);				
 		return _IBlock(doc, start, end, pattern, "blockquote", "");
 	}
 
@@ -461,6 +471,7 @@ var bd = (function() {
 	}
 
 	function Sample(doc, start, end, pattern) {
+		doc.collection('sample').entries.push(['L'+start]);
 		return _EBlock(doc, start, end, pattern, function(out) {
 			return out;
 		});
@@ -471,8 +482,8 @@ var bd = (function() {
 		var keywords = pattern.exec(mark)[1]
 		if (keywords) { keywords = keywords.split(" "); }
 		var highlight=mark.indexOf('*') == 3;
-		var tag = mark.indexOf('`') === 0 ? "code" : "samp"; 
-		doc.add("<pre"+doc.doStyles(mark, tag)+"><"+tag+">");
+		var tag = mark.indexOf('`') === 0 ? "code" : "samp";
+		doc.add("<pre id='L"+start+"' "+doc.doStyles(mark, tag)+"><"+tag+">");
 		var i = doc.scan(start+1, end, pattern);
 		var minIndent = doc.minIndent(start, end, highlight ? 1 : 0);	
 		for (var j = start+1; j < i; j++) {
@@ -494,6 +505,7 @@ var bd = (function() {
 			doc.add("<span>"+dline+"\n</span>");
 		}
 		doc.add("</"+tag+"></pre>\n");
+		doc.collection('listing').entries.push(['L'+start, i-start+1]);
 		return i+1;
 	}
 
@@ -510,13 +522,17 @@ var bd = (function() {
 				images.push(image);
 			} else {
 				first = i === start;
-				caption = "<figcaption>"+doc.doInline(image[3])+"</figcaption>";
+				caption = image[3];
 				style = doc.doStyles(image[4]);
 			}
 			i++;
 		}
+		doc.collection('figure').entries.push(['L'+start, caption]);
+		if (caption) {
+			caption = "<figcaption>"+doc.doInline(caption)+"</figcaption>";
+		}
 		if (images.length > 1 || caption) {
-			doc.add("<figure "+style+">");
+			doc.add("<figure id='L"+start+"' "+style+">");
 		}
 		if (caption && first) { doc.add(caption); }
 		for (var j = 0; j < images.length; j++) {
@@ -536,14 +552,15 @@ var bd = (function() {
 		var firstRow = true;
 		var maxColumns = 0;
 		var columns = 0;
+		var caption = "";
 		while (i < end && pattern.test(doc.line(i))) {
 			var line = doc.line(i);
 			var row = pattern.exec(line);
 			var isCaption = line.startsWith("::");
-			if (i == start) { doc.add("<table "+doc.doStyles(isCaption ? row[7] : "", "user")+">"); }
+			if (i == start) { doc.add("<table id='L"+start+"' "+doc.doStyles(isCaption ? row[7] : "", "user")+">"); }
 			if (isCaption) {
 				var side = i === start ? "top" : "bottom";
-				var caption = row[2];
+				caption = row[2];
 				if (! /^\s*$/.test(caption)) {
 					doc.add("<caption class='"+side+"'>"+doc.doInline(caption)+"</caption>");
 				}
@@ -571,6 +588,7 @@ var bd = (function() {
 			i++;
 		}
 		doc.add("</tr></table>");
+		doc.collection('table').entries.push(['L'+start, caption]);
 		return i;
 	}
 
@@ -578,12 +596,11 @@ var bd = (function() {
 		var note = pattern.exec(doc.line(start));
 		var aside = note[3] || note[4] || !pattern.test("[x]");
 		var caption = note[1] + (note[2] ? note[2] : "");
-		var id = 'note-'+start;
 		if (aside) {
-			var entry = [id, note[1], note[5]];
+			var entry = ['L'+start, note[5], note[1], note[3]];
 			doc.collection(note[1]).entries.push(entry);
 			doc.collection(note[3]).entries.push(entry);
-			doc.add("<aside "+doc.doStyles(note[6], id+' note '+note[1].toLowerCase())+">");
+			doc.add("<aside id='L"+start+"' "+doc.doStyles(note[6], ' note '+note[1].toLowerCase())+">");
 			doc.lines[start] = " *"+caption+"*"+note[5];
 		} else {
 			doc.add("<small id=\""+note[1]+"\" "+doc.doStyles(note[6], 'note')+"><dl><dt><def>"+caption+"</def></dt><dd>");
@@ -603,7 +620,10 @@ var bd = (function() {
 		var i = start;
 		doc.add("<dl>");
 		while (i < end && pattern.test(doc.line(i))) {
-			doc.add("<dt>"+doc.doInline(" "+pattern.exec(doc.line(i))[1]+" ")+"</dt>\n<dd>");
+			var term = pattern.exec(doc.line(i))[1];
+			var id = bd.text2id(term);
+			doc.collection('term').entries.push([id, term]);
+			doc.add("<dt id='"+id+"'>"+doc.doInline(" :"+term+": ")+"</dt>\n<dd>");
 			var i0 = i+1;
 			i = doc.unindent(2, i0, end, /^\s{2}|^\s?$/);
 			doc.doBlock(i0, i);
