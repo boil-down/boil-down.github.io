@@ -19,13 +19,13 @@ var bd = (function() {
 		[ List,        /^(#|[0-9]{1,2}|[a-zA-Z])\. / ],
 		[ Note,        /^\s*\[(\w+)\](:)?(\*?)(?:\{([-\w.]+)\})?(.*?)((?:\[[^\]]+\])*)?\s*$/ ],
 		[ Note,        /^([A-Z]+)(:)(\*?)(?:\{([-\w.]+)\})?(.*?)((?:\[[^\]]+\])*)?\s*$/ ],
-		[ Table,       /^([:\|])[-:. ](.+?):?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?\s*$/ ],
+		[ Table,       /^([:\|])[-\[. ](.+?)\]?([:\|])(\*)?(?:\{(\d+).?(\d+)?\})?((?:\[[^\]]+\])*)?\s*$/ ],
 		[ Definition,  /^:([^:]+):\s*/ ],
-		[ Figure,      /^(?:\( ((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}))\s+([-+ ,.\w]+)? \)|\(\((.+?)\)\))((?:\[[^\]]+\])*)?\s*$/ ],
+		[ Figure,      /^(?:\(\(((?:(?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20}))\s+([-+ ,.\w]+)?\)\)|\(\[(.+?)\]\))((?:\[[^\]]+\])*)?\s*$/ ],
 		[ Heading,     /^([A-Z]\)?|(?:[\dIVX]+(?:\.\d+)*){1,6}|\s{5})\s\s*(.+?)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
 		[ Heading,     /^(_+ )([^_]+)_*\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
 		[ Heading,     /^()([A-Z][\w]+)\s*(?:(?:\{(\w+)\})?((?:\[[^\]]+\])*)?)?\s*$/ ],
-		[ Paragraph,   /^(.|$)/ ]
+		[ Paragraph,   /.?/ ]
 	];
 
 	const INLINE = [
@@ -171,6 +171,7 @@ var bd = (function() {
 		return res;
 	}
 
+	// todo - unify data so that line is first where appropiate (with L)
 	function collection(name) {
 		name = name || 'undefined';
 		name = bd.text2id(name).replace("-", "_");
@@ -273,6 +274,10 @@ var bd = (function() {
 					: /(?:^|\/)\w+$/.test(url) 
 						? url.substring(url.lastIndexOf('/')+1).replace(/_/g, " ") 
 						: url;
+				//TODO to make wiki links work they have to add the ?url= part or what should be used
+				// this can be flexible depending on hwo the reader is setup.
+				// a solution is to have this as config in the document and read it here (doc is this)
+				// depending on a flag stored in the LINKS array
 				url = url.startsWith("www.") ? "http://"+url : url;
 				this.collection(alt?'include':'link').entries.push([url, label, cls]);
 				if (text) { label = "}}"+label+"{{"; }
@@ -446,15 +451,18 @@ var bd = (function() {
 
 	function Blockquote(doc, start, end, pattern) {
 		var attr = pattern.exec(doc.line(start))[1];
-		doc.collection('quote').entries.push(['L'+start, attr]);
+		doc.collection('quote').entries.push([start, attr]);
 		if (attr) { attr = "cite='"+attr+"'"; };
 		return _CBlock(doc, start, end, pattern, "blockquote", attr);
 	}
 
 	function Blockquote2(doc, start, end, pattern) {
-		doc.collection('quote').entries.push(['L'+start, undefined]);				
+		doc.collection('quote').entries.push([start, undefined]);				
 		return _IBlock(doc, start, end, pattern, "blockquote", "");
 	}
+
+	//TODO use data from other collection when writing collection entries? like the last header 
+	// allow in usual markup to get a counter to generate numbering like "figure 2.1" (replace in caption context?)
 
 	function Edit(doc, start, end, pattern) {
 		var line = doc.line(start);
@@ -466,12 +474,12 @@ var bd = (function() {
 
 	function Output(doc, start, end, pattern) {
 		return _EBlock(doc, start, end, pattern, function(out) {
-			return "<pre><samp>"+out.trim()+"</samp></pre>";
+			return "<pre><samp>"+bd.escapeHTML(out.trim())+"</samp></pre>";
 		});
 	}
 
 	function Sample(doc, start, end, pattern) {
-		doc.collection('sample').entries.push(['L'+start]);
+		doc.collection('sample').entries.push([start]);
 		return _EBlock(doc, start, end, pattern, function(out) {
 			return out;
 		});
@@ -505,7 +513,7 @@ var bd = (function() {
 			doc.add("<span>"+dline+"\n</span>");
 		}
 		doc.add("</"+tag+"></pre>\n");
-		doc.collection('listing').entries.push(['L'+start, i-start+1]);
+		doc.collection('listing').entries.push([start, i-start+1]);
 		return i+1;
 	}
 
@@ -518,7 +526,7 @@ var bd = (function() {
 		while (i < end && pattern.test(doc.line(i))) {
 			var line = doc.line(i);
 			var image = pattern.exec(line);
-			if (line.startsWith("( ")) {
+			if (line.startsWith("((")) {
 				images.push(image);
 			} else {
 				first = i === start;
@@ -527,7 +535,7 @@ var bd = (function() {
 			}
 			i++;
 		}
-		doc.collection('figure').entries.push(['L'+start, caption]);
+		doc.collection('figure').entries.push([start, caption]);
 		if (caption) {
 			caption = "<figcaption>"+doc.doInline(caption)+"</figcaption>";
 		}
@@ -556,7 +564,7 @@ var bd = (function() {
 		while (i < end && pattern.test(doc.line(i))) {
 			var line = doc.line(i);
 			var row = pattern.exec(line);
-			var isCaption = line.startsWith("::");
+			var isCaption = line.startsWith(":[");
 			if (i == start) { doc.add("<table id='L"+start+"' "+doc.doStyles(isCaption ? row[7] : "", "user")+">"); }
 			if (isCaption) {
 				var side = i === start ? "top" : "bottom";
@@ -588,7 +596,7 @@ var bd = (function() {
 			i++;
 		}
 		doc.add("</tr></table>");
-		doc.collection('table').entries.push(['L'+start, caption]);
+		doc.collection('table').entries.push([start, caption]);
 		return i;
 	}
 
@@ -597,7 +605,7 @@ var bd = (function() {
 		var aside = note[3] || note[4] || !pattern.test("[x]");
 		var caption = note[1] + (note[2] ? note[2] : "");
 		if (aside) {
-			var entry = ['L'+start, note[5], note[1], note[3]];
+			var entry = [start, note[5], note[1], note[3]];
 			doc.collection(note[1]).entries.push(entry);
 			doc.collection(note[3]).entries.push(entry);
 			doc.add("<aside id='L"+start+"' "+doc.doStyles(note[6], ' note '+note[1].toLowerCase())+">");

@@ -308,6 +308,7 @@ If the editor is unimportant an asterisk `*[*_name_*{{]*}}*` can be used for gen
 
 ? TODO: `*` is optional for `_NAME_:` 
 
+
 13 Lists
 
 Ordered lists start at the number of the first item given.
@@ -404,21 +405,21 @@ Three or more tilda `*{{~~~}}*` start listings that are samples:
 
 15 Images
 
-Images are given in format `*( *_url_ [_title_]* )*`:
-? ( bee.png a bee )
+Images are given in format `*((*_url_ [_title_]*))*`:
+? ((bee.png a bee))
 
 Images are blocks with [[#options options]], here to make the image float right:
-? ( bee.png a bee )[~>]
+? ((bee.png a bee))[~>]
 
- A gallery or _figure_ is done by a sequence of images, the caption `*((*_caption_*))*` is optional.
-? (( bees        ))[<>]
-? ( bee.png bee 1 )
-? ( bee.png bee 2 )
-? ( bee.png bee 3 )
+ A gallery or _figure_ is done by a sequence of images, the caption `*([*_caption_*])*` is optional.
+? ([ bees        ])[<>]
+? ((bee.png bee 1))
+? ((bee.png bee 2))
+? ((bee.png bee 3))
 
 If the caption isn't stated first, the caption goes below the images:
-? ( bee.png  )
-? (( a *bee* ))
+? ((bee.png  ))
+? ([ a *bee* ])
 
 
 16 Tables
@@ -475,9 +476,9 @@ Rows and columns can be span using the option `*{*_colspan_ [_rowspan_]*}*`:
 ? | TD col 2 |
 ? |----------|
 
- A caption can be added using `*::*_text_*::*` before or after the table body:
+ A caption can be added using `*:[*_text_*]:*` before or after the table body:
 
-? :: caption ::
+? :[ caption]:
 ? |----------|
 ? | TH col 1 |*
 ? | TH col 2 |*
@@ -632,66 +633,12 @@ being meant as markup it has to be escaped.
 
 23 Collections
 
-Collections are lists of data-rows.
-Instead of providing explicit data-rows for ^["Templates"] the named collection 
-provides the row data. 
+[[Collections]] are lists of data-rows collected while processing a source
+document. ^["Templates"] can be used to output this data rows. 
+Instead of a raw data block after the template the collection is given by
+name at the start of the template `*==={*_collection_*}*`:
 
-The `heading` collection, that collects all headings within the document can
-be used to generate a "Table of Contents":
-? _ Table of Contents _
-? ======={heading}
-? = :........:
-? : <<*^[$3]*>> :[>]
-? : ^["$4"] :
-? :.........:
-? =======
+? ==={table}
+?  $0 [[#L$1 line $1]],
+? ===
 
-All links of the page
-? ====={link}
-?  $0 [[$1 $2]], 
-? =====
-
-All includes of the page
-? ====={include}
-?  $0 [[$1 $2]], 
-? =====
-
-All defined terms
-? ===={term}
-?  $0 [[#$1 $2]],
-? ====
-
-All todos
-? ===={todo}
-?  $0 [[#$1 $2]],
-? ====
-
-All of Jan's notes
-? ===={Jan}
-?  $0 [[#$1 $3: $2]],
-? ====
-
-All tables
-? ===={table}
-?  [[#$1 $0 $2]],
-? ====
-
-All figures
-? ===={figure}
-?  [[#$1 $0 $2]],
-? ====
-
-All listings
-? ===={listing}
-?  [[#$1 $0]] $2 lines,
-? ====
-
-All quotes
-? ===={quote}
-?  [[#$1 $0 $2]],
-? ====
-
-All samples
-? ===={sample}
-?  [[#$1 $0]],
-? ====

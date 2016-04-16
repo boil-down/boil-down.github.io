@@ -27,6 +27,7 @@
 .std blockquote p { text-align: left; margin: 0 auto; display: table; }
 .std footer { font-style: normal; }
 .std a[href ^= '#'] { text-decoration: none; }
+.std a.bd-page { text-decoration: none; }
 .std a[href ^= "http"]:after {
      content: " " url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);    
 }
