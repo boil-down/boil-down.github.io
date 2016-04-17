@@ -64,8 +64,8 @@ var bd = (function() {
 	const URL = /^((?:https?:\/\/)?(?:[-\w]{0,15}[.\/#+?=&]?){1,20})$/;
 
 	const LINKS = [ // external ones
-		[ "bd-page", /^(\w){2,}$/ ],
-		[ "bd-link", URL ],
+		[ "bd-page", /^(\w){2,}$/, true ],
+		[ "bd-link", URL, false ],
 	]
 
 	const STYLES = [
@@ -94,7 +94,8 @@ var bd = (function() {
 	const TAGS = ["address", "article", "aside", "details", "figcaption", 
 		"figure", "footer", "header", "menu", "nav", "section"];
 
-	function Doc(markup) {
+	function Doc(config, markup) {
+		this.config = config;
 		this.markup = markup;
 		this.lines  = markup.split(/\r?\n/g);
 		this.html   = "";
@@ -114,7 +115,7 @@ var bd = (function() {
 	}
 
 	return {
-		init: function (markup) { return new Doc(markup); },
+		init: function (config, markup) { return new Doc(config, markup); },
 		toHTML: toHTML,
 		escapeHTML: escapeHTML,
 		decodeParam: decodeParam,
@@ -124,8 +125,8 @@ var bd = (function() {
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bd-functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-	function toHTML(markup, start, end) {
-		var doc = new Doc(markup);
+	function toHTML(config, markup, start, end) {
+		var doc = new Doc(config, markup);
 		start = start || 0;
 		end = end || doc.lines.length;
 		doc.doBlock(start, end);
@@ -282,11 +283,15 @@ var bd = (function() {
 					: /(?:^|\/)[\w+]+$/.test(url) 
 						? url.substring(url.lastIndexOf('/')+1).replace(/_/g, " ") 
 						: url;
-				//TODO to make wiki links work they have to add the ?url= part or what should be used
-				// this can be flexible depending on hwo the reader is setup.
-				// a solution is to have this as config in the document and read it here (doc is this)
-				// depending on a flag stored in the LINKS array
-				url = url.startsWith("www.") ? "http://"+url : url;
+				if (LINKS[i][2] && !alt) {
+					url = this.config.pagelink + url;
+					//TODO to make wiki links work they have to add the ?url= part or what should be used
+					// this can be flexible depending on hwo the reader is setup.
+					// a solution is to have this as config in the document and read it here (doc is this)
+					// depending on a flag stored in the LINKS array
+				} else {
+					url = url.startsWith("www.") ? "http://"+url : url;
+				}
 				//TODO distinguish external and internal links
 				this.collection(alt?'include':'link').entries.push([url, label, cls]);
 				if (text) { label = "}}"+label+"{{"; }

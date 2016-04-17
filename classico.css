@@ -16,6 +16,7 @@
 .classico h4, 
 .classico h5, 
 .classico h6 { clear: both; margin-top: 2.5em; }
+.classico pre { margin: 0 0 0 2rem; border-left: 5px solid #ccc; }
 
 .classico dt { margin-top: 0.75rem; }
 .classico dd { margin-left: 2rem; }

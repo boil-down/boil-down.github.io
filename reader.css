@@ -158,8 +158,8 @@
 .web table.describe, table.example { width: 100%; border-spacing: 5px 0; }
 .web table.describe td { width: 50%; vertical-align: top; }
 .web table.example td { width: 50%; }
-.web pre.source { white-space: pre-wrap; margin: 0; }
+.web pre.source { white-space: pre-wrap; }
 .web pre.source span { color: #ccc; }
 .web pre.source span:before{ content: '\2423'; position: absolute; }
-.web .output { border-left: 5px solid #ccc; padding-left: 10px; }
+.web .output { padding-left: 10px; }
 .output h1, .output h2, .output h3, .output h4, .output h5, .output h6 { margin-top: 0.3em !important; }

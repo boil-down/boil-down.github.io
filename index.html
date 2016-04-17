@@ -36,7 +36,7 @@ body { padding: 0; margin: 0; }
 	if (!url) {
 		url="index.bd";
 	}
-	bdReader.open({url: url, docId: "bdDocument", markupId: "bdMarkup", includes: true, redirect: true});
+	bdReader.open({url: url, docId: "bdDocument", markupId: "bdMarkup", includes: true, redirect: true, pagelink: "?url="});
 	document.getElementById('bdURL').value = url;
 	var target = bd.decodeParam("target");
 	if (target) {

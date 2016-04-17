@@ -59,9 +59,9 @@ var bdReader = (function() {
 			}
 			if (config.docId) {
 				var doc = document.getElementById(config.docId);
-				doc.innerHTML=bd.toHTML(markup);
+				doc.innerHTML=bd.toHTML(config, markup);
 				if (config.includes) {
-					includes(doc, []);
+					includes(doc, config, []);
 				}
 			}
 			if (window.location.hash) {
@@ -74,16 +74,16 @@ var bdReader = (function() {
 		});
 	}
 
-	function includes(e, loaded) {
-		var links = e.getElementsByClassName('bd-part');
-		if (!links) 
+	function includes(parent, config, loaded) {
+		var as = parent.getElementsByClassName('bd-part');
+		if (!as) 
 			return;
-		for (var i = 0; i < links.length; i++) {
-			include(links[i], loaded.slice(0));
+		for (var i = 0; i < as.length; i++) {
+			include(as[i], config, loaded.slice(0));
 		}
 	}
 
-	function include(a, loaded) {
+	function include(a, config, loaded) {
 		if (a.hostname !== window.location.hostname || loaded.indexOf(a.href) >= 0)
 			return; // no cross domain includes
 		var url = a.href;
@@ -91,26 +91,26 @@ var bdReader = (function() {
 		var file = url.lastIndexOf('#') < 0 ? url : url.substring(0, url.lastIndexOf('#'));
 		load(file, function(markup) {
 			var include = document.createElement("div");
-			include.innerHTML = extract(url, markup); 
+			include.innerHTML = extract(url, config, markup); 
 			a.parentNode.replaceChild(include, a);
-			includes(include, loaded);
+			includes(include, config, loaded);
 		});
 	}
 	
-	function extract(url, markup) {
+	function extract(url, config, markup) {
 		var range = /#L(\d+)-L(\d+)/.exec(url);
 		if (range) {
-			return bd.toHTML(markup, parseInt(range[1]), parseInt(range[2]));
+			return bd.toHTML(config, markup, parseInt(range[1]), parseInt(range[2]));
 		}
 		range = /#S([\w.]+)-S([\w.]+)/.exec(url);
 		if (range) {
-			var doc = bd.init(markup);
+			var doc = bd.init(config, markup);
 			var s = doc.scan(0, doc.lines.length, new RegExp("^"+range[1].replace(".", "\\.")));
 			var e = doc.scan(s+1, doc.lines.length, new RegExp("^"+range[2].replace(".", "\\.")));
 			doc.doBlock(s,e);			
 			return doc.html;
 		}
-		return bd.toHTML(markup);
+		return bd.toHTML(config, markup);
 	}
 
 })();
