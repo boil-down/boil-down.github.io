@@ -1,10 +1,14 @@
-***[a4 scroll][<~>]
+***[classico][<<>>]
 
-      Hello, world!   [<>][48pt]
+      Hello, world!   [><]
 
-****[50%][<=]
- [[colors#SA-SB]]*
-****
-****[50%][=>]
+Boildown is a definite flexible 
+ [[https://en.wikipedia.org/wiki/Lightweight_markup_language]]
+that allows low complexity, low footprint implementations while maintaining a 
+concise and regular markup.
 
-****
+The language is meant to be interpreted on client site by a "reader" program
+wherefore it intentionally constrians what can be expressed without taking
+away too much freedom.
+Yet, this requires it to have quite a range of marks and style options as no
+less constraint language can be used. 

@@ -1,21 +1,12 @@
-% v:beta
-% author: Jan Bernitt
+% v: "beta"
+% author: "Jan Bernitt"
 
-***[a4 rfc]
+***[classico][<<>>]
 
-                                   Boildown
+                         Quick Reference
 
-
-is a definite flexible 
- [[https://en.wikipedia.org/wiki/Lightweight_markup_language]]
-that allows low complexity, low footprint implementations while maintaining a 
-concise and regular markup.
-
-The language is meant to be interpreted on client site by a "reader" program
-wherefore it intentionally constrians what can be expressed without taking
-away too much freedom.
-Yet, this requires it to have quite a range of marks and style options as no
-less constraint language can be used. 
+The quick references explains the markup by giving examples for the most common
+cases. 
 
 1 Overview
 
@@ -44,16 +35,16 @@ Semantic markup uses single character marks:
 ...one or more when nesting makes sense...
 
 ? base^superscript^
-? ^a^^b^^ ^
-? ^^b^a^ ^^
+? x^a^^b^^ ^
+? x^^b^a^ ^^
 
 ? base~subscript~
-? ~a~~b~~ ~
-? ~~b~a~~ ~
+? x~a~~b~~ ~
+? x~~b~a~~ ~
 
-? a 'quote',
-? a '' 'quote' within a quote'',
-? a ' ''quote'' within a quote'
+? 'quote',
+? '' 'quote' within a quote'',
+? ' ''quote'' within a quote'
 
 Stylistic markup uses two character marks:
 ? ``monospace``
@@ -292,7 +283,7 @@ The most common note is a footnote.
 
 Notes are blocks and can have styles:
 
-? [BAR2] something [`]
+? [BAR2] something [*]
 
 
 Note annotated with an editor `*{*_editor_*}*` are general notes (not footnotes). 
@@ -370,8 +361,8 @@ per level.
 ?   as usual indented
 ? 
 ? :last term:
-?   1. this
-?   2. that 
+?   a. this
+?   b. that is a long line that hopefully breaks somewhere
 
 
 14 Listings

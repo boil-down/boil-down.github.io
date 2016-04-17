@@ -1,16 +1,6 @@
 /* ~~~~~~~~~~~~~~~~~~~~~~ std defines functional stuff ~~~~~~~~~~~~~~~~~~~~~~ */
 /* basic reset */
-.std p { margin: 0; padding: 0; line-height: 1.5; }
-.std p + p, 
-.std * + p { margin: 0.6em 0 0.4em 0; padding: 0; }
-.std p:first-child + * { margin-top: 0.6em; }
-.std h1, 
-.std h2, 
-.std h3, 
-.std h4, 
-.std h5, 
-.std h6 { clear: both; margin-top: 2.5em; }
-.std code { padding: 1px 5px; background-color: #F0F0F0; white-space: pre-wrap; }
+.std code { padding: 1px 2px; background-color: #F0F0F0; white-space: pre-wrap; }
 .std code strong { color: #FF4136; }
 .std p code { white-space: pre; }
 .std pre { padding: 5px; margin: 3px 0; line-height: 1.4em; background-color: #F0F0F0; }
@@ -61,7 +51,7 @@
 .std .a4 { max-width: 21cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
 .std .a5 { max-width: 14.8cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
 .std .a6 {  max-width: 10.5cm; padding: 0 6.5%; margin: 0 auto 0 0; box-sizing: border-box; }
-.web .minipage { box-sizing: border-box; }
+.std .minipage { box-sizing: border-box; }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ clr defines colors ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /* standard colors - http://clrs.cc/ */
@@ -133,6 +123,11 @@
 .clr .bc--fuchsia, .clr tr.bc--fuchsia > *, .clr u.label-16 { border-color: #F012BE; }
 .clr .bc--purple , .clr tr.bc--purple  > *, .clr u.label-17 { border-color: #B10DC9; }
 
+.clr aside.note { border-left-width: 5px; border-left-style: solid; color: #444; }
+.clr aside.note.info { background: rgba(255, 220, 0, 0.25); border-color: rgba(255, 220, 0, 0.5); }
+.clr aside.note.todo { background: rgba(255, 133, 27, 0.25); border-color: rgba(255, 133, 27, 0.5); }
+.clr aside.note.obsolete { background: rgba(255, 65, 54, 0.25); border-color: rgba(255, 65, 54, 0.5); }
+
 /* ~~~~~~~~~~~~~~~~~~ web defines a classic web-like style ~~~~~~~~~~~~~~~~~~ */
 /* viewport types */
 .web .scroll { min-height: 100%; }
@@ -157,15 +152,7 @@
 .web u[class^='label'] { display: inline-block; padding: 4px; margin: 1px; border-left-width: 5px; border-left-style: solid; text-decoration: none; line-height: 1em; font-size: 11px; font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif; border-radius: 3px; color: #444; }
 
 /* notes */
-.web .note { display: block; }
-.web .note p { margin: 0; }
-.web .note > p + p { text-indent: 1em; }
-.web .note ol, 
-.web .note ul { margin: 0; padding-left: 1em; }
-.web aside.note { border-left-width: 5px; border-left-style: solid; padding: 10px; margin-bottom: 20px; overflow: hidden; clear: both; font-size: 12px; font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif; color: #444; line-height: 1.5; }
-.web aside.note.info { background: rgba(255, 220, 0, 0.25); border-color: rgba(255, 220, 0, 0.5); }
-.web aside.note.todo { background: rgba(255, 133, 27, 0.25); border-color: rgba(255, 133, 27, 0.5); }
-.web aside.note.obsolete { background: rgba(255, 65, 54, 0.25); border-color: rgba(255, 65, 54, 0.5); }
+.web aside.note { padding: 10px; margin-bottom: 20px; overflow: hidden; clear: both; font-size: 12px; font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif; line-height: 1.4; }
 
 /* examples */
 .web table.describe, table.example { width: 100%; border-spacing: 5px 0; }
@@ -174,5 +161,5 @@
 .web pre.source { white-space: pre-wrap; margin: 0; }
 .web pre.source span { color: #ccc; }
 .web pre.source span:before{ content: '\2423'; position: absolute; }
-.web .output h1, .output h2, .output h3, .output h4, .output h5, .output h6 { margin-top: 0.3em; }
 .web .output { border-left: 5px solid #ccc; padding-left: 10px; }
+.output h1, .output h2, .output h3, .output h4, .output h5, .output h6 { margin-top: 0.3em !important; }

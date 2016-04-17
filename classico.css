@@ -1,0 +1,34 @@
+@import url(https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic);
+@import url(https://fonts.googleapis.com/css?family=Merriweather+Sans:400,400italic,700,700italic,300italic,300);
+
+/* classico */
+.classico { max-width: 1000px; font-family: Merriweather, serif; }
+.classico > div { margin: 3rem 8% 8rem 26%; }
+
+.classico p { margin: 0; padding: 0; line-height: 1.4; }
+.classico p + p, 
+.classico * + p { margin: 1rem 0 0.5em 0; padding: 0; }
+.classico p:first-child + * { margin-top: 0.5rem; }
+.classico h1 { font-family: "Merriweather Sans", Merriweather, serif; font-size: 300%; text-transform: uppercase; }
+.classico h1, 
+.classico h2, 
+.classico h3, 
+.classico h4, 
+.classico h5, 
+.classico h6 { clear: both; margin-top: 2.5em; }
+
+.classico dt { margin-top: 0.75rem; }
+.classico dd { margin-left: 2rem; }
+.classico ul,
+.classico ol { margin-top: 0; padding-left: 1.3rem; }
+.classico li { margin-top: 0.25rem; padding-left: 0.7rem; }
+.classico li ul,
+.classico li ol,
+.classico li dl { margin-bottom: 0.5rem; }
+
+.classico .note { display: block; }
+.classico .note p { margin: 0; }
+.classico .note > p + p { text-indent: 1rem; }
+.classico .note ol, 
+.classico .note ul { margin: 0; padding-left: 1rem; }
+

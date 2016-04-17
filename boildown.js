@@ -33,7 +33,7 @@ var bd = (function() {
 		["$1<cite>$2</cite>$3",      /(^| )"(..*?)"($| )/g ], // first! messes with attributes otherwise
 		["<br class=\"newpage\"/>", / \\\\\*(?: |$)/g ],
 		["<br/>",                / \\\\(?: |$)/g ],
-		["$1<wbr>$2",            /(\w)\\-(\w)/g ],
+		["$1&shy;$2",            /(\w)\\-(\w)/g ],
 		["$1&mdash;$2",          /(^| )-{3}($| )/g ],
 		["$1&ndash;$2",          /(^| )--($| )/g ],
 		["&hellip;",             /\.\.\./g ], 
@@ -78,8 +78,8 @@ var bd = (function() {
 		// fixed values
 		[ /^\*$/, "font-weight", "bold"],
 		[ /^_$/,  "font-style", "italic"],
-		[ /^<<>>$/, "text-align", "justified"],
-		[ /^<>$/, "text-align", "center"],
+		[ /^<>$/, "text-align", "justified"],
+		[ /^><$/, "text-align", "center"],
 		[ /^<$/,  "text-align", "left"],
 		[ /^>$/,  "text-align", "right"],
 		[ /^<~$/, "float", "left"],
@@ -98,7 +98,7 @@ var bd = (function() {
 		this.markup = markup;
 		this.lines  = markup.split(/\r?\n/g);
 		this.html   = "";
-		this.meta   = [];
+		this.meta   = {};
 		this.collections = {};
 		// fx rendering
 		this.doBlock   = doBlock;
@@ -118,7 +118,8 @@ var bd = (function() {
 		toHTML: toHTML,
 		escapeHTML: escapeHTML,
 		decodeParam: decodeParam,
-		text2id: text2id
+		text2id: text2id,
+		link: link
 	};
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bd-functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -144,6 +145,13 @@ var bd = (function() {
 
 	function text2id(text) {
 		return text.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").toLowerCase();
+	}
+
+	function link(type, url) {
+		var hint =document.createElement("link");
+		hint.setAttribute("rel", type);
+		hint.setAttribute("href", url);
+		document.getElementsByTagName("head")[0].appendChild(hint);
 	}
 
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Doc-functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -271,7 +279,7 @@ var bd = (function() {
 				var cls = LINKS[i][0]+(alt ? " bd-part" : "")
 				var label = text 
 					? text.trim() 
-					: /(?:^|\/)\w+$/.test(url) 
+					: /(?:^|\/)[\w+]+$/.test(url) 
 						? url.substring(url.lastIndexOf('/')+1).replace(/_/g, " ") 
 						: url;
 				//TODO to make wiki links work they have to add the ?url= part or what should be used
@@ -279,8 +287,12 @@ var bd = (function() {
 				// a solution is to have this as config in the document and read it here (doc is this)
 				// depending on a flag stored in the LINKS array
 				url = url.startsWith("www.") ? "http://"+url : url;
+				//TODO distinguish external and internal links
 				this.collection(alt?'include':'link').entries.push([url, label, cls]);
 				if (text) { label = "}}"+label+"{{"; }
+				if (alt && !url.startsWith("http://")) {
+					bd.link("subresource", url);
+				}
 				return "{{<a href=\""+url+"\" class=\""+cls+"\">"+label+"</a>}}";
 			}
 		}
@@ -408,8 +420,12 @@ var bd = (function() {
 	function Meta(doc, start, end) {
 		var line = doc.line(start);
 		var i = line.indexOf(':');
-		if (i > 0) {		
-			doc.meta.push([ line.substring(2, i), line.substring(i+1)]);
+		if (i > 0) {
+			try {		
+				doc.meta[line.substring(2, i)] = JSON.parse(line.substring(i+1));
+			} catch (e) { 
+				console.warn(e);
+			}
 		}
 		return start+1;
 	}

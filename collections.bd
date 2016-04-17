@@ -1,3 +1,7 @@
+***[a4 rfc]
+
+                              Collections
+
 The `heading` collection, that collects all headings within the document can
 be used to generate a "Table of Contents":
 ? _ Table of Contents _
