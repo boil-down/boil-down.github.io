@@ -64,6 +64,7 @@ var bdReader = (function() {
 					includes(doc, config, []);
 				}
 			}
+			document.title = url.replace(/_|\.\w+$/g, "") + " - boildown"
 			if (window.location.hash) {
 				document.getElementById(window.location.hash.substring(1)).scrollIntoView();
 			}
