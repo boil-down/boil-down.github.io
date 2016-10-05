@@ -43,6 +43,7 @@ var bd = (function() {
 		["<del>$1</del>",        /--(..*?)--/g ],
 		["<ins>$1</ins>",        /\+\+(..*?)\+\+/g ],
 		["<u class='label-$2'>$1</u>", /!(..*?)!\{(\d\d?)\}/g ],
+		["<span style='color: $2$3;'>$1</span>", /!!([^:].*?)!!\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
 		["<u class='$2'>$1</u>", /!(..*?)!\{([-a-z]+)\}/g ],
 		["<tt>$1</tt>",          /``(..*?)``/g ],
 		["<span style='font-variant:small-caps;'>$1</span>", /==(..*?)==/g ],
@@ -55,7 +56,6 @@ var bd = (function() {
 		[" <i>$1</i> ",          / \/([^\/ \t].*?[^\/ \t])\/ /g ],
 		[" <s>$1</s> ",          / -([^- \t].*?[^- \t])- /g ],
 		[" <def>$1</def> ",      / :([^: \t].*?[^: \t]): /g ],		
-		["<span style='color: $2$3;'>$1</span>", /::([^:].*?)::\{(?:(\w{1,10})|(#[0-9A-Fa-f]{6}))\}/g ],
 		["<a href=\"#sec-$1\" class='bd-sref'>$1</a>", /\^\[((?:\d+|[A-Z])(?:\.\d+)*)\]/g ],
 		[ substRef,              /\^\[\"([-\w ]+)\"\]/g ], 
 		["<a href='#$1' class='bd-nref'>$1</a>", /\^\[(\w+)\]/g ],
@@ -184,8 +184,9 @@ var bd = (function() {
 	function collection(name) {
 		name = name || 'undefined';
 		name = bd.text2id(name).replace("-", "_");
+		var doc = this;
 		if (!this.collections[name]) {
-			this.collections[name] = { entries: [] };
+			this.collections[name] = { entries: [], add: function(e) { if (!doc.rolling) { this.entries.push(e); } } };
 		}
 		return this.collections[name];
 	}
@@ -233,6 +234,7 @@ var bd = (function() {
 
 	function postProcessCollections(doc) {
 		var html = doc.html;
+		doc.rolling=true;
 		for (var c in doc.collections) {
 			if (doc.collections.hasOwnProperty(c)) {
 				var col = doc.collections[c];
@@ -283,17 +285,13 @@ var bd = (function() {
 					: /(?:^|\/)[\w+]+$/.test(url) 
 						? url.substring(url.lastIndexOf('/')+1).replace(/_/g, " ") 
 						: url;
-				if (LINKS[i][2] && !alt) {
-					url = this.config.pagelink + url;
-					//TODO to make wiki links work they have to add the ?url= part or what should be used
-					// this can be flexible depending on hwo the reader is setup.
-					// a solution is to have this as config in the document and read it here (doc is this)
-					// depending on a flag stored in the LINKS array
+				if (LINKS[i][2] && !alt) { // wiki links
+					url = this.config.pagelink + url; // prepand pagelink parameter (like "?url=")
 				} else {
 					url = url.startsWith("www.") ? "http://"+url : url;
 				}
-				//TODO distinguish external and internal links
-				this.collection(alt?'include':'link').entries.push([url, label, cls]);
+				//TODO distinguish external and internal links in collections
+				this.collection(alt?'include':'link').add([url, label, cls]);
 				if (text) { label = "}}"+label+"{{"; }
 				if (alt && !url.startsWith("http://")) {
 					bd.link("subresource", url);
@@ -665,7 +663,7 @@ var bd = (function() {
 		var i = start;		
 		var bullet = pattern.test("* ");
 		var no = pattern.exec(doc.line(i))[1];
-		doc.add( bullet ? "<ul>\n" : "<ol type='"+listType(no)+"' start='"+listStart(no)+"'>\n");
+		doc.add( bullet ? "<ul>\n" : "<ol type='"+typeAttr(no)+"' start='"+startAttr(no)+"'>\n");
 		while (i < end && pattern.test(doc.line(i))) {
 			var i0 = i;
 			doc.lines[i] = doc.lines[i].substring(doc.lines[i].indexOf(' '));
@@ -678,8 +676,8 @@ var bd = (function() {
 		return i;
 	}
 
-	function listStart (item) { return item === '#' ? 1 : parseInt(item) ? parseInt(item) : item.charCodeAt() - listType(item).charCodeAt() + 1; } 
-	function listType  (item) { var c = item.charAt(0); return /\d|#/.test(c) ? '1' : /i/i.test(c) ? c : /[A-Z]/.test(c) ? 'A' : 'a'; }
+	function startAttr(no) { return no === '#' ? 1 : parseInt(no) ? parseInt(no) : no.charCodeAt() - typeAttr(no).charCodeAt() + 1; } 
+	function typeAttr(no)  { var c = no.charAt(0); return /\d|#/.test(c) ? '1' : /i/i.test(c) ? c : /[A-Z]/.test(c) ? 'A' : 'a'; }
 
 	function Minipage(doc, start, end, pattern) {
 		var line = doc.line(start);

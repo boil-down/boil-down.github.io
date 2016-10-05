@@ -9,7 +9,7 @@
 .classico p + p, 
 .classico * + p { margin: 1rem 0 0.5em 0; padding: 0; }
 .classico p:first-child + * { margin-top: 0.5rem; }
-.classico h1 { font-family: "Merriweather Sans", Merriweather, serif; font-size: 300%; text-transform: uppercase; }
+.classico h1 { font-family: "Merriweather Sans", Merriweather, serif; font-size: 300%; margin-bottom: 2em; text-transform: uppercase; }
 .classico h1, 
 .classico h2, 
 .classico h3, 

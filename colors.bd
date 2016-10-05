@@ -5,6 +5,8 @@
 A BACKGROUND 
 
 :[          ]:[ff-mono c-white p-2em][99%][><][1rem][*]
+|------------|
+| bc-white   |{3}[bc-white c-black][25%]
 :............:
 : bc-black   :[bc-black][33%]
 : bc-gray    :[bc-gray c-black][33%]
@@ -26,13 +28,13 @@ A BACKGROUND
 : bc-purple  :[bc-purple]
 : bc-fuchsia :[bc-fuchsia]
 :............:
-| bc-white   |{3}[bc-white c-black][25%]
-|------------|
 
 
 B BACKGROUND 50% TRANSPARENT
 
 :[          ]:[ff-mono c-black p-2em][99%][><][1rem][*]
+|------------|
+| bc-white50 |{3}[bc-white50]
 :............:
 : bc-black50 :[bc-black50][33%]
 : bc-gray50  :[bc-gray50][33%]
@@ -54,12 +56,13 @@ B BACKGROUND 50% TRANSPARENT
 : bc-fuchsia50:[bc-fuchsia50]
 : bc-maroon50:[bc-maroon50]
 :............:
-| bc-white50 |{3}[bc-white50]
-|------------|
+
 
 C FOREGROUND
 
 :[          ]:[ff-mono c-black p-2em][99%][><][1rem][*]
+|------------|
+| c-white    |{3}[c-white bc-black]
 |------------|
 | c-black    |[c-black][33%]
 | c-gray     |[c-gray][33%]
@@ -80,8 +83,6 @@ C FOREGROUND
 | c-purple   |[c-purple]
 | c-fuchsia  |[c-fuchsia]
 | c-maroon   |[c-maroon]
-|------------|
-| c-white    |{3}[c-white bc-gray]
 |------------|
 
 
