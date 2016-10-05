@@ -463,20 +463,20 @@ var bd = (function() {
 		if (no) { no = no.replace(/[\)_]+/, "").trim(); }
 		var noa = /[A-Z0-9]/.test(no) ? "<a id=\"sec-"+no+"\"></a> ": "";
 		var n = title ? 1 : no ? no.split(/\./).length+1 : 2;
-		doc.collection('heading').entries.push([id, n, no, text]);		
+		doc.collection('heading').add([id, n, no, text]);		
 		doc.add("\n<h"+n+" id=\""+id+"\" "+doc.doStyles(noTextIdStyle[4])+">"+noa+doc.doInline(text)+"</h"+n+">\t");
 		return start+1;
 	}
 
 	function Blockquote(doc, start, end, pattern) {
 		var attr = pattern.exec(doc.line(start))[1];
-		doc.collection('quote').entries.push([start, attr]);
+		doc.collection('quote').add([start, attr]);
 		if (attr) { attr = "cite='"+attr+"'"; };
 		return _CBlock(doc, start, end, pattern, "blockquote", attr);
 	}
 
 	function Blockquote2(doc, start, end, pattern) {
-		doc.collection('quote').entries.push([start, undefined]);				
+		doc.collection('quote').add([start, undefined]);				
 		return _IBlock(doc, start, end, pattern, "blockquote", "");
 	}
 
@@ -498,7 +498,7 @@ var bd = (function() {
 	}
 
 	function Sample(doc, start, end, pattern) {
-		doc.collection('sample').entries.push([start]);
+		doc.collection('sample').add([start]);
 		return _EBlock(doc, start, end, pattern, function(out) {
 			return out;
 		});
@@ -532,7 +532,7 @@ var bd = (function() {
 			doc.add("<span>"+dline+"\n</span>");
 		}
 		doc.add("</"+tag+"></pre>\n");
-		doc.collection('listing').entries.push([start, i-start+1]);
+		doc.collection('listing').add([start, i-start+1]);
 		return i+1;
 	}
 
@@ -554,7 +554,7 @@ var bd = (function() {
 			}
 			i++;
 		}
-		doc.collection('figure').entries.push([start, caption]);
+		doc.collection('figure').add([start, caption]);
 		if (caption) {
 			caption = "<figcaption>"+doc.doInline(caption)+"</figcaption>";
 		}
@@ -615,7 +615,7 @@ var bd = (function() {
 			i++;
 		}
 		doc.add("</tr></table>");
-		doc.collection('table').entries.push([start, caption]);
+		doc.collection('table').add([start, caption]);
 		return i;
 	}
 
@@ -625,8 +625,8 @@ var bd = (function() {
 		var caption = note[1] + (note[2] ? note[2] : "");
 		if (aside) {
 			var entry = [start, note[5], note[1], note[3]];
-			doc.collection(note[1]).entries.push(entry);
-			doc.collection(note[3]).entries.push(entry);
+			doc.collection(note[1]).add(entry);
+			doc.collection(note[3]).add(entry);
 			doc.add("<aside id='L"+start+"' "+doc.doStyles(note[6], ' note '+note[1].toLowerCase())+">");
 			doc.lines[start] = " *"+caption+"*"+note[5];
 		} else {
@@ -649,7 +649,7 @@ var bd = (function() {
 		while (i < end && pattern.test(doc.line(i))) {
 			var term = pattern.exec(doc.line(i))[1];
 			var id = bd.text2id(term);
-			doc.collection('term').entries.push([id, term]);
+			doc.collection('term').add([id, term]);
 			doc.add("<dt id='"+id+"'>"+doc.doInline(" :"+term+": ")+"</dt>\n<dd>");
 			var i0 = i+1;
 			i = doc.unindent(2, i0, end, /^\s{2}|^\s?$/);
