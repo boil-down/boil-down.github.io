@@ -1,4 +1,4 @@
-***[a4 rfc]
+***[a4 man]
                          Programmer Handbook
 
 1 Principles
@@ -20,4 +20,4 @@
 * block start marks are left aligned (after potential indent; except separators)
 * start and end marks of inline markups are identical (escaping is an exception)
 * inline marks do not use combinations of different characters
-
+* inline marks are substituted in a predefined order
