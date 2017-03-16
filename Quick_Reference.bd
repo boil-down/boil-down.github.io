@@ -410,7 +410,7 @@ Images are blocks with [[#options options]], here to make the image float right:
 
 If the caption isn't stated first, the caption goes below the images:
 ? ((bee.png  ))
-? ([ a *bee* ])
+? ([ figure $figure$: a *bee* ])
 
 
 16 Tables
@@ -590,12 +590,12 @@ being meant as markup it has to be escaped.
 
 22 Templates
 Templates have two parts:
-1. The template (uses `*$*_n_` for placeholders)
+1. The template (uses `*$*_n_$` for placeholders)
 2. Data rows (values spearated by `*;*`)
 
  A simple template for a list would look like this:
 ? ==============
-? #. *$1*: _$2_
+? #. *$1$*: _$2$_
 ? ==============
 ? Foo; Bar
 ? Baz; Que
@@ -610,8 +610,8 @@ once before all rows, those after once after all rows.
 ? = : X         :*
 ? = : Y         :*
 ? :...........:
-? : $1 :
-? : $2 :
+? : $1$ :
+? : $2$ :
 ? = |-----------|
 ? = | *sum*     :
 ? = : x         |
@@ -631,52 +631,52 @@ name at the start of the template `*==={*_collection_*}*`:
 
 All links of the page
 ? ====={link}
-?  $0 [[$1 $2]], 
+?  $0$ [[$4$ $5$]], 
 ? =====
 
 All includes of the page
 ? ====={include}
-?  $0 [[?url=$1 $2]], 
+?  $0$ [[?url=$4$ $5$]], 
 ? =====
 
 All defined terms
 ? ===={term}
-?  $0 [[#$1 $2]],
+?  $0$ [[#$1$ $4$]],
 ? ====
 
 All todos
 ? ===={todo}
-?  $0 [[#L$1 $2]],
+?  $0$ [[#$1$ $5$]],
 ? ====
 
 All of Jan's notes
 ? ===={Jan}
-?  $0 [[#L$1 $3: $2]],
+?  $0$ [[#$1$ $5$]],
 ? ====
 
 All tables
 ? ==={table}
-?  $0 [[#L$1 line $1]],
+?  $0$ [[#$1$ line $2$]],
 ? ===
 
 All figures
 ? ===={figure}
-?  [[#L$1 $0 $2]],
+?  [[#$1$ $0$ $2$]],
 ? ====
 
 All listings
 ? ===={listing}
-?  [[#L$1 $0]] $2 lines,
+?  [[#$1$ $0$]] $3$ lines,
 ? ====
 
 All quotes
 ? ===={quote}
-?  [[#L$1 $0 $2]],
+?  [[#$1$ $0$ $2$]],
 ? ====
 
 All samples
 ? ===={sample}
-?  [[#L$1 $0]],
+?  [[#$1$ $0$]],
 ? ====
 
 The `heading` collection, that collects all headings within the document can
@@ -684,7 +684,7 @@ be used to generate a "Table of Contents":
 ? _ Table of Contents _
 ? ======={heading}
 ? = :........:
-? : <<*^[$3]*>> :[>]
-? : ^["$4"] :
+? : <<*^[$4$]*>> :[>]
+? : ^["$5$"] :
 ? :.........:
 ? =======
